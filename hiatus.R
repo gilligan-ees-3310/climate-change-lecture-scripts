@@ -82,11 +82,11 @@ hiatus_plot <- function(data, plt.index, min_year = 1970, change_year = 1998,
     plt_data <- early
   }
   if (plt.index == 2) {
-    early_color = "light steel blue2"
-    late_color = "dark red"
+    early_color = "lightsteelblue2"
+    late_color = "darkred"
   } else {
-    early_color = "dark blue"
-    late_color = "dark red"
+    early_color = "darkblue"
+    late_color = "darkred"
   }
 
   p <- ggplot(plt_data, aes(time, t.anom.annual, color = time.frame)) +
@@ -109,13 +109,13 @@ hiatus_plot <- function(data, plt.index, min_year = 1970, change_year = 1998,
   p <- p + xlim(min_year,max.year) + ylim(yv)
   p <- p +  annotate("text",x=max.year,y=0.8 *
                min.temp, label=data.source.text,
-             color="dark gray", hjust=1, size=5) +
+             color="darkgray", hjust=1, size=5) +
     annotate("text",x=max.year,y= 1.2 * min.temp, label=plot.credit.label,
-             color="dark gray", hjust=1, size=5)
+             color="darkgray", hjust=1, size=5)
   if (plt.index >= 4) {
     p <- p +
       annotate("text", x=max.year,y=chg.temp * 0.9, label=fit.label,
-               hjust=1, vjust=1, size=7, color="dark blue")
+               hjust=1, vjust=1, size=7, color="darkblue")
   }
 
   p <- p + theme_bw(base_size=20)

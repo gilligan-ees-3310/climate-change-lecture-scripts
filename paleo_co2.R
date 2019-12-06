@@ -5,7 +5,7 @@ library(RColorBrewer)
 epica_co2_url <- 'ftp://ftp.ncdc.noaa.gov/pub/data/paleo/icecore/antarctica/epica_domec/edc-co2-2008.txt'
 epica_temp_url <- 'ftp://ftp.ncdc.noaa.gov/pub/data/paleo/icecore/antarctica/epica_domec/edc3deuttemp2007.txt'
 law_co2_url <- 'ftp://ftp.ncdc.noaa.gov/pub/data/paleo/icecore/antarctica/law/law2006.txt'
-grim_co2_url <- 'http://www.csiro.au/greenhouse-gases/GreenhouseGas/data/CapeGrim_CO2_data_download.csv'
+grim_co2_url <- 'http://capegrim.csiro.au/GreenhouseGas/data/CapeGrim_CO2_data_download.csv'
 
 
 epica_co2_file <- basename(epica_co2_url)

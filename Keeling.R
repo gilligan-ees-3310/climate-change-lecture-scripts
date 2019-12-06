@@ -76,7 +76,7 @@ plot.CO2 <- function(co2data, vp.x=0.98,vp.y=0.07,vp.w=0.4,vp.h=0.38,y.adj = NA)
   keeling.plot <- keeling.plot + scale_shape_manual(values=c("annual"=NA, "monthly"=NA, "last"=16),
                                                     name="Averaging", guide=FALSE)
   keeling.plot <- keeling.plot + scale_color_manual(values=c("annual"="blue", "monthly"="red",
-                                                             "last"="dark green"),
+                                                             "last"="darkgreen"),
                                                     labels=c("annual","monthly",
                                                              last.measurement.text),
                                                     name="Averaging")
@@ -85,7 +85,7 @@ plot.CO2 <- function(co2data, vp.x=0.98,vp.y=0.07,vp.w=0.4,vp.h=0.38,y.adj = NA)
   keeling.plot <- keeling.plot + guides(color=guide_legend(override.aes=list(
     shape=c(NA,NA,16),
     linetype=c(1,1,0),
-    colour=c('blue','red','dark green'),
+    colour=c('blue','red','darkgreen'),
     size=c(1.5,1,5),
     lwd=c(1.5,1,0)),
     keywidth=2))
@@ -107,14 +107,14 @@ plot.CO2 <- function(co2data, vp.x=0.98,vp.y=0.07,vp.w=0.4,vp.h=0.38,y.adj = NA)
                                           hjust=1, vjust=0, size=6)
   keeling.plot <- keeling.plot + annotate("text",x=1990,y=310,label=data.source.text,
                                           hjust=1, vjust=1, size=3.5)
-  #        annotate("point",x=trend$Year[nrow(trend)],y=trend$monthly[nrow(trend)],colour="dark green",size=5)
-  #        annotate("point",x=last.measurement$Year,y=last.measurement$monthly,colour="dark green",size=5)
-  #        annotate("point",x=2000.5,y=last.measurement$monthly,size=5,colour="dark green")
+  #        annotate("point",x=trend$Year[nrow(trend)],y=trend$monthly[nrow(trend)],colour="darkgreen",size=5)
+  #        annotate("point",x=last.measurement$Year,y=last.measurement$monthly,colour="darkgreen",size=5)
+  #        annotate("point",x=2000.5,y=last.measurement$monthly,size=5,colour="darkgreen")
   #        annotate("text", x=2001,y=last.measurement$monthly,label=last.measurement.text, vjust=0.5,hjust=0,size=6)
 
   seasonal.plot <- ggplot(seasonal, aes(Month,CO2)) +
-    geom_point(size=I(4), color=I('dark blue')) +
-    geom_line(size=I(1), color=I('dark blue')) +
+    geom_point(size=I(4), color=I('darkblue')) +
+    geom_line(size=I(1), color=I('darkblue')) +
     scale_x_discrete(labels=c("Jan","","","Apr","","","Jul","","","Oct","","","Jan")) +
     scale_y_continuous(breaks=NULL, name=bquote(CO[2])) +
     ggtitle("Annual cycle") +

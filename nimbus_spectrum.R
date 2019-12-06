@@ -71,7 +71,7 @@ if (FALSE) {
                          sec.axis = sec_axis(~ ., breaks = 1E4 / lambda, 
                                              labels = lambda,
                                              name = expression(paste("Wavelength ", (mu * m))))) +
-      annotate('text', x = 400, y = 2, size=4, color = 'dark gray', hjust = 0, vjust = 0,
+      annotate('text', x = 400, y = 2, size=4, color = 'darkgray', hjust = 0, vjust = 0,
                label = paste("Data source: NASA IRIS IR spectrometer",
                              "ftp://acdisc.gsfc.nasa.gov/data/s4pa/Nimbus4_IRIS_Level1B/IRISN4RAD.001/",
                              sep="\n")) +

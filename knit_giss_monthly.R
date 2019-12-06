@@ -18,8 +18,8 @@ extract_years <- function(giss_data, dec.nov = FALSE) {
 }
 
 warmest_years <- function(annual_data, n = 14) {
-  invisible(head(annual_data %>% filter(! is.na(t.anom.annual)) %>%
-                   arrange( desc(t.anom.annual)), n))
+  annual_data %>% top_n(n, t.anom.annual) %>% arrange(desc(t.anom.annual)) %>%
+    invisible()
 }
 
 make_baseline <- function(annual_data, start, end) {
@@ -89,7 +89,7 @@ make_gisplot <- function(data,
                      lwd=c(1,2,1,1,1,1))
     scale_vals <- c("yearly"="slategray3","decadal"="blue",
                     "baseline"="black", "hottest"="red",
-                    "last"="dark green",
+                    "last"="darkgreen",
                     "last.month"="purple")
     scale_breaks <-  c("yearly","decadal","baseline",
                        "hottest","last","last.month")
@@ -102,7 +102,7 @@ make_gisplot <- function(data,
                      lwd=c(1,2,1,1,1))
     scale_vals <- c("yearly"="slategray3","decadal"="blue",
                     "baseline"="black", "hottest"="red",
-                    "last"="dark green")
+                    "last"="darkgreen")
     scale_breaks <-  c("yearly","decadal","baseline",
                        "hottest","last")
     scale_labs <- c("Annual temp","10-year average",
@@ -129,16 +129,18 @@ make_gisplot <- function(data,
                              legend.background=element_rect(fill='white',color='gray95'))
   gisplot <- gisplot + annotate("text",
                                 x=max(monthly_data$year), y=min_temp,
-                                label=data.source.text, color="dark gray",
+                                label=data.source.text, color="darkgray",
                                 hjust=1, size=base_size / 5)
   warm.string <- paste(n_warmest, "warmest years:", toString(warmest$year[1:warm_row[1]]))
+  if (n_warmest > warm_row[1]) {
   for(i in seq(warm_row[1], n_warmest - 1, warm_row[2])) {
     j <- min(warm_row[2], n_warmest - i)
     warm.string <- paste(warm.string, '\n', toString(warmest$year[i + (1:j)], sep=''))
   }
+  }
   gisplot <- gisplot + annotate('text', x=1950, y=max_temp - 0.12,
                                 hjust=0.5, vjust="top", size=base_size / 3,
-                                label = warm.string, colour='dark red',fontface='bold')
+                                label = warm.string, colour='darkred',fontface='bold')
 
   gisplot
 }

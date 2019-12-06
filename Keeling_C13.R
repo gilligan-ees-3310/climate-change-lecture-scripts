@@ -66,7 +66,8 @@ plot.nwr <- function() {
   return(p)
 }
 
-plot.scripps <- function() {
+plot.scripps <- function(xmin = 1995, xmax = NA, note_x = xmin + 2.5,
+                         note_delta_y = c(0, 0, 0)) {
   d13 <- read.13('co2c13_mlo_surface-flask_1_sil_month.txt')
   o2 <- read.scripps('mloo.txt','o2')
   co2 <- read.scripps('mloc.txt','co2')
@@ -78,9 +79,9 @@ plot.scripps <- function() {
   names(co2) <- c('year','val','var')
   df <- rbind(co2,o2,d13)
   df$var <- factor(df$var, levels=c('CO2','O2','delta.13'),ordered=TRUE)
-  annot <- data.frame(x=1992.5, y=c(375, -250, -8.3),
+  annot <- data.frame(x=note_x, y=c(385, -450, -8.475) + note_delta_y,
                       label=c('CO[2] * " " * ("ppm")',
-                              'O[2] * " " * ("meg")',
+                              'delta * O[2] * " " * ("meg")',
                               'delta^13 * C * " " * ("\u2030")'),
                       var=c('CO2','O2','delta.13'))
 
@@ -88,6 +89,7 @@ plot.scripps <- function() {
               aes(x=year,y=val, color=var)) +
     geom_line(size=I(1)) +
     geom_text(aes(x=x,y=y,label=label), data=annot, parse=TRUE, size=8) +
+    xlim(xmin, xmax) +
     facet_grid(var~., scales='free') +
     scale_color_brewer(type="qual", palette="Dark2") +
     theme_bw(base_size=20) +

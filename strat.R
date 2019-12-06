@@ -79,7 +79,7 @@ plot_strat_2 <- function(data.dir = NULL) {
   p_xmax <- ceiling(max(data$year[data$height != 'Surface']))
 
   sst <-  c(1957, 1968, 1979, 1989, 2000, 2013, 1964, 1974, 1985, 1995, 2005)
-  send <- c(1960, 1972, 1982, 1993, 2002, max(data$year) - 0.5, 1966, 1976, 1988, 1998, 2010)
+  send <- c(1960, 1972, 1982, 1993, 2002, 2015, 1966, 1976, 1988, 1998, 2010)
   if (sst[1] < p_xmin && send[1] > p_xmin) sst[1] <- p_xmin
   var <- c(rep_len('max',6), rep_len('min',5))
   arect <- data.frame(start=sst, stop=send, Sunspots=var)

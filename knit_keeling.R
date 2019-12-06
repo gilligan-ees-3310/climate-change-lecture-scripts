@@ -55,7 +55,7 @@ plot.co2 <- function(co2data, inset = TRUE, base_size = 40) {
   kp <- kp + guides(color=guide_legend(override.aes=list(
     shape=c(NA,NA,16),
     linetype=c(1,1,0),
-#    colour=c('blue','red','dark green'),
+#    colour=c('blue','red','darkgreen'),
     colour = palette,
     size=c(1.5,1,5),
     lwd=c(1.5,1,0)),
@@ -90,9 +90,9 @@ plot.co2 <- function(co2data, inset = TRUE, base_size = 40) {
   kp <- kp + annotate("text",x=annot.pos$x,y=annot.pos$y.src,
                       label=data.source.text, hjust=1, vjust = 0, size= base_size * 0.105,
                       color = 'gray45')
-  #        annotate("point",x=trend$Year[nrow(trend)],y=trend$monthly[nrow(trend)],colour="dark green",size=5)
-  #        annotate("point",x=last.measurement$Year,y=last.measurement$monthly,colour="dark green",size=5)
-  #        annotate("point",x=2000.5,y=last.measurement$monthly,size=5,colour="dark green")
+  #        annotate("point",x=trend$Year[nrow(trend)],y=trend$monthly[nrow(trend)],colour="darkgreen",size=5)
+  #        annotate("point",x=last.measurement$Year,y=last.measurement$monthly,colour="darkgreen",size=5)
+  #        annotate("point",x=2000.5,y=last.measurement$monthly,size=5,colour="darkgreen")
   #        annotate("text", x=2001,y=last.measurement$monthly,label=last.measurement.text, vjust=0.5,hjust=0,size=6)
   
   seasonal.plot <- ggplot(seasonal, aes(x = month, y = co2)) +

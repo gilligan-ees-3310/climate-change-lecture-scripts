@@ -1,7 +1,7 @@
 library(tidyverse)
 library(rprojroot)
 
-data_dir <- find_root("semester.yml", ".") %>% file.path("data")
+data_dir <- here::here("data")
 
 setup_dirs <- function() {
   for (dir in c('noaa','giss','berkeley','hadley')) {
@@ -15,19 +15,27 @@ setup_dirs <- function() {
 #
 # DOWNLOAD GISS DATA
 #
-giss_url <- c(land.sea = "http://data.giss.nasa.gov/gistemp/tabledata/GLB.Ts+dSST.txt",
-              land = "http://data.giss.nasa.gov/gistemp/tabledata/GLB.Ts.txt")
+giss_url <- c(land.sea = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.txt",
+              land = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts.txt")
 
 giss_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.txt"),
                land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.txt'))
 
-for (loc in c('land.sea','land'))
+giss_csv_url <- c(land.sea = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv",
+              land = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts.csv")
+
+giss_csv_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
+               land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
+
+for (loc in c('land.sea','land')) {
   download.file(giss_url[loc], giss_file[loc])
+  download.file(giss_csv_url[loc], giss_csv_file[loc])
+}
 
 #
 # DOWNLOAD KEELING DATA
 #
-mlo_url <- 'http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/in_situ_co2/monthly/monthly_in_situ_co2_mlo.csv'
+mlo_url <- 'https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/in_situ_co2/monthly/monthly_in_situ_co2_mlo.csv'
 keeling_filename = 'co2_mm_mlo.txt'
 
 noaa_mlo_url <- 'ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt'
@@ -52,7 +60,10 @@ write.table(CO2_data,file=file.path(data_dir, "keeling", noaa_keeling_filename),
 #
 # DOWNLOAD TSI DATA
 #
-tsi.url <- 'http://lasp.colorado.edu/lisird/latis/historical_tsi.csv'
+tsi.url <- str_c('http://lasp.colorado.edu/lisird/latis/dap/historical_tsi.csv',
+                 '?&time>=1610-01-01T00:00:00.000Z&time<=',
+                 lubridate::now(tz = "UTC") %>% 
+                   strftime("%Y-%m-%dT%H:%M:%S%z", tz = "UTC"))
 
 tsi.file <- 'historical_tsi.csv'
 
@@ -82,8 +93,8 @@ for (url in c(global_land_url, global_land_ocean_url, northern_hemisphere_url,
 # DOWNLOAD NOAA GLOBAL TEMPERATURES
 #
 
-noaa_url <- c( land.sea = 'https://www.ncdc.noaa.gov/cag/time-series/global/globe/land_ocean/p12/12/1880-2018.csv',
-               land = 'https://www.ncdc.noaa.gov/cag/time-series/global/globe/land/p12/12/1880-2018.csv')
+noaa_url <- c( land.sea = 'https://www.ncdc.noaa.gov/cag/time-series/global/globe/land_ocean/p12/12/1880-2019.csv',
+               land = 'https://www.ncdc.noaa.gov/cag/time-series/global/globe/land/p12/12/1880-2019.csv')
 
 noaa_file <- c(land.sea = file.path('global_temp', 'noaa', "land_sea_1880-2018.csv"),
                land = file.path('global_temp', 'noaa', 'land_1880-2018.csv'))
@@ -114,7 +125,7 @@ law_co2_file <- basename(law_co2_url)
 
 download.file(law_co2_url, destfile = file.path(data_dir, "paleo", law_co2_file), mode = 'wb')
 
-grim_url <- 'http://www.csiro.au/greenhouse-gases/GreenhouseGas/data/CapeGrim_CO2_data_download.csv'
+grim_url <- 'http://capegrim.csiro.au/GreenhouseGas/data/CapeGrim_CO2_data_download.csv'
 grim_file <- basename(grim_url)
 
 download.file(grim_url, destfile = file.path(data_dir, 'keeling', grim_file), mode = 'wb')
@@ -145,12 +156,15 @@ file <- 'hadat2_monthly_global_mean.txt'
 download.file(url, file.path(data_dir, "upper", file))
 
 
-rss_url <- 'http://www1.ncdc.noaa.gov/pub/data/cmb/temp-and-precip/upper-air/rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt'
+# rss_url <- 'http://www1.ncdc.noaa.gov/pub/data/cmb/temp-and-precip/upper-air/rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt'
+rss_url <- 'https://www.ncdc.noaa.gov/monitoring-content/sotc/upper-air/msu/rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt'
 rss_file <- 'rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt'
 download.file(rss_url,file.path(data_dir, "upper", rss_file))
 
 
-uah_url <- 'http://www1.ncdc.noaa.gov/pub/data/cmb/temp-and-precip/upper-air/uahncdc.ls'
+# alt_uah_url <- 'https://www.nsstc.uah.edu/data/msu/v6.0/tls/tlsglhmam_6.0.txt'
+# uah_url <- 'http://www1.ncdc.noaa.gov/pub/data/cmb/temp-and-precip/upper-air/uahncdc.ls'
+uah_url <- 'https://www.ncdc.noaa.gov/monitoring-content/sotc/upper-air/msu/uahncdc.ls'
 uah_file <- 'uahncdc.ls'
 
 download.file(uah_url,file.path(data_dir, "upper", uah_file))
@@ -162,3 +176,4 @@ download.file("http://www.eia.gov/totalenergy/data/browser/csv.cfm?tbl=T12.01",
 # nimbus_file <- "sahara.csv"
 #
 # download.file(nimbus_url, file.path(data_dir, "nimbus", nimbus_file))
+

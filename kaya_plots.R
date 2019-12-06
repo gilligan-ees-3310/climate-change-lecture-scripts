@@ -32,7 +32,7 @@ kaya_plot <- function(kaya, countries, v, y_lab = NULL) {
     legend = guides(color = guide_legend(title = "Country"),
                     shape = guide_legend(title = "Country"))
   } else {
-    color_scale = scale_color_manual(values = "dark blue")
+    color_scale = scale_color_manual(values = "darkblue")
     legend = guides(color = FALSE, shape = FALSE)
   }
 

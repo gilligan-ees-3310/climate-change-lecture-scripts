@@ -35,7 +35,7 @@ process_spectrum <- function(spectrum, descr, tmin=220, tmax = 300, nc = 5,
   color_scale <- c(Observed = 'black')
   p <- ggplot(spectrum, aes(x = k, y = i, color = t)) + geom_line(size = 1) + 
     scale_y_continuous(limits=c(0,ymax), name = "Radiance", expand = c(0.01,0.0)) +
-    annotate('text', x = 400, y = 2, size=base_size * 0.25, color = 'dark gray', hjust = 0, vjust = 0,
+    annotate('text', x = 400, y = 2, size=base_size * 0.25, color = 'darkgray', hjust = 0, vjust = 0,
              label = paste("Data source: NASA IRIS IR spectrometer",
                            # "ftp://acdisc.gsfc.nasa.gov/data/s4pa/Nimbus4_IRIS_Level1B/IRISN4RAD.001/",
                            sep="\n")) +

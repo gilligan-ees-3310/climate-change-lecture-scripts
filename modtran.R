@@ -369,14 +369,14 @@ plot_modtran <- function(filename = NULL, text = NULL,
   if (! is.na(annotate_size)) {
     p1 <- p1 + annotate("text", x=annotate_x_1, y=annotate_y_1,
                         label=caption, parse="TRUE", hjust=0, vjust=1,
-                        size=annotate_size, color="dark blue")
+                        size=annotate_size, color="darkblue")
 
     if (! is.na(delta_i)) {
       caption <- paste("Delta * I[", direction, "] == ",
                        formatC(delta_i, digits=2, format="f"))
       p1 <- p1 + annotate("text", x=annotate_x_2, y=annotate_y_1,
                           label=caption, parse="TRUE", hjust=1, vjust=1,
-                          size=annotate_size, color="dark blue")
+                          size=annotate_size, color="darkblue")
     }
 
     if (! is.na(last_i_out)) {
@@ -384,7 +384,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
                                             digits=2, format="f"))
       p1 <- p1 + annotate("text", x=annotate_x_2, y=annotate_y_2,
                           label=caption, parse="TRUE", hjust=1, vjust=1,
-                          size=annotate_size, color="dark blue")
+                          size=annotate_size, color="darkblue")
     } else if (! is.na(delta_t)) {
       caption <- paste("Delta * T[ground] == ",formatC(delta_t,
                                                        digits=delta_t_digits,
@@ -392,7 +392,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
                        " * K")
       p1 <- p1 + annotate("text", x=annotate_x_2, y=annotate_y_2,
                           label=caption, parse="TRUE", hjust=1, vjust=1,
-                          size=annotate_size, color="dark blue")
+                          size=annotate_size, color="darkblue")
 
     }
   }

@@ -112,31 +112,31 @@ stan_hiatus_plot <- function(data, fit, plt.index, min_year = 1970, change_year 
                              yend = slope * year_high + intercept, 
                          x = year_low, xend = year_high),
                          list(year_low = force(year_low), year_high = force(year_high))),
-                         alpha = sample.alpha, color = 'dark green', 
+                         alpha = sample.alpha, color = 'darkgreen', 
                          size = I(sample.line.size))
   } else if (plt.index > 3) {
     p <- p + geom_abline(data = sample_n(fit$df, n.sample), 
                          aes(intercept = intercept, slope = slope), 
-                         alpha = sample.alpha, color = 'dark green', 
+                         alpha = sample.alpha, color = 'darkgreen', 
                          size = I(sample.line.size))
   }
   p <- p + 
     geom_point(size=I(point.size)) + 
     geom_line(size=I(line.size))
   p <- p + 
-    scale_color_manual(values = c(early = 'dark blue', late = 'dark red'), guide = 'none') +
+    scale_color_manual(values = c(early = 'darkblue', late = 'darkred'), guide = 'none') +
     labs(y=expression(paste("Temperature Anomaly:  ",degree*C,"   (",1951-1980," Baseline)")),
          x = "Year") + 
     xlim(min_year,max.year) + ylim(1.25 * range(annual_data$t.anom.annual)) + 
     annotate("text",x=max.year,y=0.8 * min.temp, label=data.source.text, 
-             color="dark gray", hjust=1, size= base.size * a.scale * 0.5) +
+             color="darkgray", hjust=1, size= base.size * a.scale * 0.5) +
     annotate("text",x=max.year,y= 1.2 * min.temp, label=plot.credit.label, 
-             color="dark gray", hjust=1, size= base.size * a.scale * 0.5)
+             color="darkgray", hjust=1, size= base.size * a.scale * 0.5)
   if (plt.index >= 3) {
     p <- p + 
       annotate("text", x=max.year,y=chg.temp * 0.9, label=fit.label, 
                hjust=1, vjust=1, size= base.size * a.scale * 0.7, 
-               color="dark green")
+               color="darkgreen")
   }
   
   p <- p + theme_bw(base_size=base.size)
@@ -177,27 +177,27 @@ lm_hiatus_plot <- function(data, plt.index, min_year = 1970, change_year = 1998,
   p <- ggplot(plt_data, aes(time, t.anom.annual, color = time.frame))
   
   if (plt.index == 3) {
-    p <- p + geom_smooth(data = early, method=lm, se=TRUE, fullrange=FALSE, color = "dark green")
+    p <- p + geom_smooth(data = early, method=lm, se=TRUE, fullrange=FALSE, color = "darkgreen")
   } else if (plt.index > 3) {
-    p <- p + geom_smooth(data = early, method=lm, se=TRUE, fullrange=TRUE, color = "dark green")
+    p <- p + geom_smooth(data = early, method=lm, se=TRUE, fullrange=TRUE, color = "darkgreen")
   }
   p <- p + 
     geom_point(size=I(point.size)) + 
     geom_line(size=I(line.size))
   p <- p +
-  scale_color_manual(values = c(early = 'dark blue', late = 'dark red'), guide = 'none') +
+  scale_color_manual(values = c(early = 'darkblue', late = 'darkred'), guide = 'none') +
     labs(y=expression(paste("Temperature Anomaly:  ",degree*C,"   (",1951-1980," Baseline)")),
          x = "Year") + 
     xlim(min_year,max.year) + ylim(1.25 * range(annual_data$t.anom.annual)) + 
     annotate("text",x=max.year,y=0.8 * min.temp, label=data.source.text, 
-             color="dark gray", hjust=1, size=base.size * a.scale * 0.5) +
+             color="darkgray", hjust=1, size=base.size * a.scale * 0.5) +
     annotate("text",x=max.year,y= 1.2 * min.temp, label=plot.credit.label, 
-             color="dark gray", hjust=1, size=base.size * a.scale * 0.5)
+             color="darkgray", hjust=1, size=base.size * a.scale * 0.5)
   if (plt.index >= 3) {
     p <- p + 
       annotate("text", x=max.year,y=chg.temp * 0.9, label=fit.label, 
                hjust=1, vjust=1, size= base.size * a.scale * 0.7, 
-               color="dark green")
+               color="darkgreen")
   }
   
   p <- p + theme_bw(base_size=base.size)

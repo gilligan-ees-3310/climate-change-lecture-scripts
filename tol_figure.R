@@ -37,9 +37,9 @@ plot_tol_data <- function(tol_data, as.damages = TRUE) {
     scale_x_continuous(limits = c(0,6), breaks = 0:6) +
     scale_y_continuous(limits = yrange, breaks = seq(yrange[1],yrange[2],5),
                        minor_breaks = seq(yrange[1],yrange[2],1)) +
-    scale_color_manual(name = '', values = c('original' = 'dark blue', 
-                                  'gremlin omission' = 'dark orange', 
-                                  'recent' = 'dark red'), 
+    scale_color_manual(name = '', values = c('original' = 'darkblue', 
+                                  'gremlin omission' = 'darkorange', 
+                                  'recent' = 'darkred'), 
                        guide = guide_legend(reverse = TRUE)) +
     scale_shape_manual(values = c('valid' = 16, 'gremlin error' = 13, 'corrected' = 17),
                        name = '', guide = guide_legend(reverse = TRUE)) +
@@ -68,9 +68,9 @@ plot_original_tol_data <- function(tol_data, as.damages = TRUE) {
     scale_x_continuous(limits = c(0,6), breaks = 0:6) +
     scale_y_continuous(limits = yrange, breaks = seq(yrange[1],yrange[2],5),
                        minor_breaks = seq(yrange[1],yrange[2],1)) +
-    scale_color_manual(name = '', values = c('original' = 'dark blue', 
-                                             'gremlins (2014)' = 'dark orange', 
-                                             'recent' = 'dark red'), 
+    scale_color_manual(name = '', values = c('original' = 'darkblue', 
+                                             'gremlins (2014)' = 'darkorange', 
+                                             'recent' = 'darkred'), 
                        guide = FALSE) +
     scale_shape_manual(values = c('valid' = 16, 'gremlin error' = 13, 'corrected' = 17),
                        name = '', guide = FALSE) +
