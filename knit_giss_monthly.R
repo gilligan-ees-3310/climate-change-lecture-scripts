@@ -2,7 +2,6 @@
 # GISS monthly
 #
 library(tidyverse)
-library(stringr)
 
 library(ggthemes)
 library(grid)

@@ -8,11 +8,11 @@ make_layer_diagram = function(n_layers, boundary = TRUE) {
   layer_thickness = layer_unit
   layer_spacing = 2 * layer_unit
 
-  visible = data_frame(x = 1, xend = 2, y = 10, yend = 1,
+  visible = tibble(x = 1, xend = 2, y = 10, yend = 1,
                        xlab = 1.05, ylab = 10, just = 0,
                        name = "Visible")
 
-  layers = data_frame(name = c("Earth", paste("Atmospheric Layer", seq(n_layers))),
+  layers = tibble(name = c("Earth", paste("Atmospheric Layer", seq(n_layers))),
                       class = c("Earth", rep("Atmosphere", n_layers)),
                       xmin = 0, xmax = 10,
                       ymin = c(0, 1 + seq(n_layers) * (layer_thickness + layer_spacing) - layer_thickness),
@@ -23,14 +23,14 @@ make_layer_diagram = function(n_layers, boundary = TRUE) {
 
   if (n_layers == 1) layers$name[2] = "Atmospheric Layer"
 
-  ir = data_frame(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
+  ir = tibble(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
                   xlab = 6.2, ylab = (y + yend) / 2,  just = 0,
                   name = paste0("I['", n_layers, ",up']"))
   if (n_layers >= 1) {
-    ir_up = data_frame(x = 4, xend = 5, y = head(layers$ymax, -1), yend = tail(layers$ymin, -1),
+    ir_up = tibble(x = 4, xend = 5, y = head(layers$ymax, -1), yend = tail(layers$ymin, -1),
                        xlab = 4.3, ylab = (y + yend) / 2, just = 1,
                        name = paste0("I['", c("ground", seq(n_layers - 1))[1:n_layers], ",up']"))
-    ir_down = data_frame(x = 6, xend = 7, y =  tail(layers$ymin, -1), yend = head(layers$ymax, -1),
+    ir_down = tibble(x = 6, xend = 7, y =  tail(layers$ymin, -1), yend = head(layers$ymax, -1),
                          xlab = 6.7, ylab = (y + yend) / 2, just = 0,
                          name = paste0("I['", seq(n_layers), ",down']"))
     ir = bind_rows(ir, ir_up, ir_down)
@@ -72,7 +72,7 @@ make_nuclear_winter_diagram = function(boundary = TRUE) {
   layer_thickness = layer_unit
   layer_spacing = 2 * layer_unit
 
-  layers = data_frame(name = c("Earth", "Dusty atmosphere"),
+  layers = tibble(name = c("Earth", "Dusty atmosphere"),
                       class = c("Earth", "Atmosphere"),
                       xmin = 0, xmax = 10,
                       ymin = c(0, 1 + seq(n_layers) * (layer_thickness + layer_spacing) - layer_thickness),
@@ -81,19 +81,19 @@ make_nuclear_winter_diagram = function(boundary = TRUE) {
                       y = c(0.5, 1 + seq(n_layers) * (layer_thickness + layer_spacing) - 0.5 * layer_thickness)
   )
 
-  visible = data_frame(x = 1, xend = 2, y = 10, yend = max(layers$ymax),
+  visible = tibble(x = 1, xend = 2, y = 10, yend = max(layers$ymax),
                        xlab = 1.05, ylab = 10, just = 0,
                        name = "Visible")
 
 
-  ir = data_frame(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
+  ir = tibble(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
                   xlab = 6.2, ylab = (y + yend) / 2,  just = 0,
                   name = paste0("I['", n_layers, ",up']"))
   if (n_layers >= 1) {
-    ir_up = data_frame(x = 4, xend = 5, y = head(layers$ymax, -1), yend = tail(layers$ymin, -1),
+    ir_up = tibble(x = 4, xend = 5, y = head(layers$ymax, -1), yend = tail(layers$ymin, -1),
                        xlab = 4.3, ylab = (y + yend) / 2, just = 1,
                        name = paste0("I['", c("ground", seq(n_layers - 1))[1:n_layers], ",up']"))
-    ir_down = data_frame(x = 6, xend = 7, y =  tail(layers$ymin, -1), yend = head(layers$ymax, -1),
+    ir_down = tibble(x = 6, xend = 7, y =  tail(layers$ymin, -1), yend = head(layers$ymax, -1),
                          xlab = 6.7, ylab = (y + yend) / 2, just = 0,
                          name = paste0("I['", seq(n_layers), ",down']"))
     ir = bind_rows(ir, ir_up, ir_down)

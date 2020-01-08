@@ -5,7 +5,7 @@ p_load("treemapify")
 
 theme_set(theme_bw(base_size = 20))
 
-nations <- data_frame(country=c('USA','Japan','EU','Canada','Australia','Other Enthusiastic',
+nations <- tibble(country=c('USA','Japan','EU','Canada','Australia','Other Enthusiastic',
                                 'Brazil', 'China','India','Indonesia','Other Reluctant',
                                 'Small Islands', 'Other Vulnerable',
                                 'Russia', 'Other Exporters'),

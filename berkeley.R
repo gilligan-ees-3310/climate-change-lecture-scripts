@@ -4,9 +4,8 @@
 library(scales)
 library(ggplot2)
 library(grid)
-library(here)
 
-berkeley_dir = here("data", "global_temp", "berkeley")
+berkeley_dir <- rprojroot::find_rstudio_root_file("data", "global_temp", "berkeley")
 
 download_berkeley <- function() {
   global_land_ocean_url = "http://berkeleyearth.lbl.gov/auto/Global/Land_and_Ocean_complete.txt"

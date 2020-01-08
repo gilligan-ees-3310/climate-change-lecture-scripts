@@ -9,10 +9,12 @@ ssource <- function(filename, chdir = F) {
       script_dir = get("script.dir", envir = globalenv())
     else if (dir.exists("scripts"))
       script_dir = "scripts"
-    else if (dir.exists(here("scripts")))
-      script_dir = here("scripts")
-    else if (dir.exists(here("util_scripts")))
-      script_dir = here("util_scripts")
+    else if (dir.exists(rprojroot::find_rstudio_root_file("scripts")))
+      script_dir = ("scripts")
+    else if (dir.exists(rprojroot::find_rstudio_root_file("lecture_scripts")))
+      script_dir = rprojroot::find_rstudio_root_file("lecture_scripts")
+    else if (dir.exists(rprojroot::find_rstudio_root_file("util_scripts")))
+      script_dir = rprojroot::find_rstudio_root_file("util_scripts")
     else
       script_dir = "."
     if(dir.exists(script_dir)) filename = file.path(script_dir, filename)
@@ -26,7 +28,7 @@ if (! exists("planck")) ssource("planck.R", chdir = T)
 
 
 
-model_params = data_frame(
+model_params = tibble(
   key = c("co2_ppm",
           "ch4_ppm",
           "trop_o3_ppb",
@@ -66,7 +68,7 @@ model_params = data_frame(
             NA, "sensor_orientation")
 )
 
-atmos_spec <- data_frame(
+atmos_spec <- tibble(
   key = c("tropical",
           "midlatitude summer", "midlatitude winter",
           "subarctic summer", "subarctic winter",
@@ -83,13 +85,13 @@ atmos_spec <- data_frame(
   )
 )
 
-h2o_fixed <- data_frame(
+h2o_fixed <- tibble(
   key = c("vapor pressure", "relative humidity"),
   value = c(0, 1),
   descr = c("constant vapor pressure", "constant relative humidity")
 )
 
-cloud_spec <- data_frame(
+cloud_spec <- tibble(
   key = c("none",
           "cumulus",
           "altostratus",
@@ -121,7 +123,7 @@ cloud_spec <- data_frame(
             "NOAA cirrus model")
 )
 
-sensor_orientation <- data_frame(
+sensor_orientation <- tibble(
   key = c("down", "up"),
   value = c(180, 0),
   descr = c("looking down", "looking up")
@@ -166,7 +168,7 @@ run_modtran <- function(filename = NULL,
     # message("Lookup class = ", class(lookup), ", type = ", typeof(lookup), ", dim = ", dim(lookup))
     values[k] = lookup %>% filter(key == values[k]) %>% select(value) %>% simplify()
   }
-  args <- data_frame(key = names(values), value = values)
+  args <- tibble(key = names(values), value = values)
   params = model_params %>% inner_join(args, by = "key")
   url_base = 'http://climatemodels.uchicago.edu/cgi-bin/modtran/modtran.cgi?'
   args = str_c(params$cgi, params$value, sep = "=", collapse = "&")
@@ -337,7 +339,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
 
   thermal <- data.frame(k = spectrum$k, t = tmin)
   thermal <- bind_rows(thermal, map(seq(tmin + dt, tmax, dt),
-                                    ~data_frame(k = spectrum$k, t = .x)))
+                                    ~tibble(k = spectrum$k, t = .x)))
   thermal <- thermal %>%
     mutate(tk = planck(k, as.numeric(as.character(t)),fudge_factor=1),
            t = paste(t, "K") %>%
