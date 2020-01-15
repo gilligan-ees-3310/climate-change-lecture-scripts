@@ -23,8 +23,17 @@ knit_tsi <- function(tsi.as.anomaly = TRUE) {
     invisible(z)
   }
 
-  giss.url <- c(land.sea = "http://data.giss.nasa.gov/gistemp/tabledata/GLB.Ts+dSST.txt",
-                land = "http://data.giss.nasa.gov/gistemp/tabledata/GLB.Ts.txt")
+  giss_url <- c(land.sea = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.txt",
+                land = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts.txt")
+
+  giss_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.txt"),
+                 land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.txt'))
+
+  giss_csv_url <- c(land.sea = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv",
+                    land = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts.csv")
+
+  giss_csv_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
+                     land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
 
   tsi.url <- 'http://lasp.colorado.edu/lisird/tsi/historical_tsi.html'
 
