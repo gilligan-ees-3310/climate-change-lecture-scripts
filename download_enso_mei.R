@@ -2,16 +2,35 @@ library(tidyverse)
 library(rvest)
 
 load_mei <- function() {
-  mei_text <- read_html("https://www.esrl.noaa.gov/psd/enso/mei/table.html") %>%
+  # MEI version 2, 1079--present
+  mei_text <- read_html("https://www.esrl.noaa.gov/psd/enso/mei/data/meiv2.data") %>%
     html_nodes("body") %>% html_text() %>%
     str_split("\n", simplify = TRUE) %>% keep(~str_detect(.x, "^[0-9]{4}")) %>%
     str_c(collapse = "\n")
 
   mei <- mei_text %>%
-    { suppressWarnings(
-    read_tsv(., col_names = c("year", month.abb),
-             col_types = str_c(c("i", rep("d", 12)), collapse = ""))
-    ) } %>%
+    read_table(col_names = c("year", month.abb),
+             col_types = str_c(c("i", rep("d", 12)), collapse = ""),
+             skip = 1) %>%
+    gather(-year, key = month, value = mei) %>%
+    mutate(month = ordered(month, levels = month.abb),
+           date = year + (as.integer(month) - 1) / 12) %>%
+    arrange(date) %>%
+    na.omit()
+
+  invisible(mei)
+}
+
+load_old_mei <- function() {
+  # Old version of MEI, 1950--2018
+  mei_text <- read_html("https://www.esrl.noaa.gov/psd/enso/mei.old/table.html") %>%
+    html_nodes("body") %>% html_text() %>%
+    str_split("\n", simplify = TRUE) %>% keep(~str_detect(.x, "^[0-9]{4}")) %>%
+    str_c(collapse = "\n")
+
+  mei <- mei_text %>%
+    read_tsv(col_names = c("year", month.abb),
+               col_types = str_c(c("i", rep("d", 12)), collapse = "")) %>%
     gather(-year, key = month, value = mei) %>%
     mutate(month = ordered(month, levels = month.abb),
            date = year + (as.integer(month) - 1) / 12) %>%
