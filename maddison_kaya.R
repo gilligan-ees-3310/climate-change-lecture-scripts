@@ -32,8 +32,8 @@ fill_in <- function(df, this.year) {
   invisible(output)
 }
 
-load_maddison_kaya <- function(data.dir = "data") {
-  maddison <- read_excel(file.path(data.dir, "kaya", "mpd2018.xlsx"), "Full data")
+load_maddison_kaya <- function(data_dir = "data") {
+  maddison <- read_excel(file.path(data_dir, "kaya", "mpd2018.xlsx"), "Full data")
 
   kaya <- maddison %>%
     select(nation = country, nat_code = countrycode, year, P = pop, g = rgdpnapc) %>%
@@ -70,11 +70,11 @@ load_maddison_kaya <- function(data.dir = "data") {
   cdiac_global_filename <- "global.1751_2014.csv"
   cdiac_national_filename <- "nation.1751_2014.csv"
 
-  co2.nat.names <- read_csv(file.path(data.dir, "kaya", cdiac_national_filename),
+  co2.nat.names <- read_csv(file.path(data_dir, "kaya", cdiac_national_filename),
                             col_names = FALSE, n_max = 1) %>%
     as_vector() %>% unname()
 
-  co2.nat <- read_csv(file.path(data.dir, "kaya", cdiac_national_filename),
+  co2.nat <- read_csv(file.path(data_dir, "kaya", cdiac_national_filename),
                       col_names = co2.nat.names, skip = 4,
                       na = c("", "na", "n/a", "NA", "N/A", ".")) %>%
     clean_names() %>%
@@ -100,11 +100,11 @@ load_maddison_kaya <- function(data.dir = "data") {
                                "Occupied Palestinian Territory" = "Palestine"
              )) %>% str_trim())
 
-  co2.glob.names <- read_csv(file.path(data.dir, "kaya", cdiac_global_filename),
+  co2.glob.names <- read_csv(file.path(data_dir, "kaya", cdiac_global_filename),
                             col_names = FALSE, n_max = 1) %>%
     as_vector() %>% unname()
 
-  co2.glob <- read_csv(file.path(data.dir, "kaya", cdiac_global_filename),
+  co2.glob <- read_csv(file.path(data_dir, "kaya", cdiac_global_filename),
                       col_names = co2.glob.names, skip = 2,
                       na = c("", "na", "n/a", "NA", "N/A", ".")) %>%
     clean_names() %>%

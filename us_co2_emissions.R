@@ -2,12 +2,12 @@ library(tidyverse)
 library(stringr)
 library(lubridate)
 
-get_us_emissions <- function(data_dir = data.dir) {
+get_us_emissions <- function(data_dir = data_dir) {
   download.file("http://www.eia.gov/totalenergy/data/browser/csv.cfm?tbl=T12.01",
                 file.path(data_dir, 'MET_T12_01.csv'))
 }
   
-plot_us_co2_emissions <- function(data_dir = file.path(data.dir, 'ghg_emissions'), 
+plot_us_co2_emissions <- function(data_dir = file.path(data_dir, 'ghg_emissions'), 
                                   file = 'MET_T12_01.csv') {
   emissions <- read_csv(file.path(data_dir, file)) %>%
     dplyr::filter(MSN == 'TETCEUS') %>% mutate(year = YYYYMM %/% 100, month = YYYYMM %% 100) %>%

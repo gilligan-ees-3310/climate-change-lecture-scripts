@@ -1,9 +1,9 @@
-if (! exists('data.dir')) {
+if (! exists('data_dir')) {
   source('semester_config.R')
 }
 
 load_dice_data <- function() {
-  data <- read.csv(file.path(data.dir, 'dice', 'dice2010.csv'),header=T, blank.lines.skip=T)
+  data <- read.csv(file.path(data_dir, 'dice', 'dice2010.csv'),header=T, blank.lines.skip=T)
   data <- data %>% filter(! is.na(Growth))
   data <- data %>% gather(key = 'year', value = 'value', -Var, -Growth, convert=TRUE)
   data <- data %>% filter(!is.na(value))

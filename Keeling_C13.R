@@ -3,7 +3,7 @@
 #
 
 read.13 <- function(filename) {
-  data <- read.table(file.path(data.dir, 'keeling', filename), header=F,
+  data <- read.table(file.path(data_dir, 'keeling', filename), header=F,
                      col.names=c("site","year", "month", "delta"), skip=70)
   data$Frac.Year <- data$year + (data$month - 0.5)/12
   df <- data.frame(year = data$Frac.Year, d13 = data$delta)
@@ -11,7 +11,7 @@ read.13 <- function(filename) {
 }
 
 read.14 <- function(filename) {
-  data <- read.table(file.path(data.dir, 'keeling', filename), header=F,
+  data <- read.table(file.path(data_dir, 'keeling', filename), header=F,
                      col.names=c("site","year", "month", "delta"), skip=38)
   data$Frac.Year <- data$year + (data$month - 0.5)/12
   df <- data.frame(year = data$Frac.Year, d14 = data$delta)
@@ -19,7 +19,7 @@ read.14 <- function(filename) {
 }
 
 read.co2 <- function(filename) {
-  data <- read.table(file.path(data.dir, 'keeling', filename), header=F,
+  data <- read.table(file.path(data_dir, 'keeling', filename), header=F,
                      col.names=c("site","year", "month", "co2"), skip=69)
   data$Frac.Year <- data$year + (data$month - 0.5)/12
   df <- data.frame(year = data$Frac.Year, co2 = data$co2)
@@ -27,7 +27,7 @@ read.co2 <- function(filename) {
 }
 
 read.scripps <- function(filename, varname) {
-  data <- read.table(file.path(data.dir, 'keeling', filename), header=F,
+  data <- read.table(file.path(data_dir, 'keeling', filename), header=F,
                      col.names = c("year", "raw", "norm", "rsmooth", "nsmooth",
                                    "sample.date"))
   df <- data[,c('year','rsmooth')]

@@ -4,7 +4,7 @@
 library(tidyverse)
 
 download_nino34 <- function(dir = NULL) {
-  if (is.null(dir)) dir <- data.dir
+  if (is.null(dir)) dir <- data_dir
   download.file('http://www.esrl.noaa.gov/psd/data/correlation/nina34.data',
                 file.path(dir,'nino34.dat'))
   download.file('http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for',
@@ -12,7 +12,7 @@ download_nino34 <- function(dir = NULL) {
 }
 
 load_nino34 <- function(file = "nino34.dat", dir = NULL) {
-  if (is.null(dir)) dir <- data.dir
+  if (is.null(dir)) dir <- data_dir
   lines <- readLines(file.path(dir, file))[-1]
   lines <- lines[grepl('^[[:space:]]*[[:digit:]]{4}[[:space:]]', lines)]
   nino <- read.table(text=lines, header=F, na.strings = c('NA','9999','-99.99'))
@@ -28,8 +28,8 @@ load_nino34 <- function(file = "nino34.dat", dir = NULL) {
 }
 
 load_weekly <- function(file = "nino_weekly.dat", dir = NULL) {
-  if (is.null(dir)) dir <- data.dir
-  nino <- read.fwf(file.path(data.dir,file),
+  if (is.null(dir)) dir <- data_dir
+  nino <- read.fwf(file.path(data_dir,file),
                      header=F, skip=4, na.strings = c('NA','9999','-99.99'))
   names(nino) <- c('week','nino_1.2_sst', 'nino_1.2_anomaly',
                    'nino_3_sst', 'nino_3_anomaly',

@@ -4,13 +4,13 @@ p_load(stringr)
 
 data_dir = 'data'
 
-load_energy_by_fuel <- function(data.dir = data_dir) {
+load_energy_by_fuel <- function(data_dir = data_dir) {
 
-  coal_filename = file.path(data.dir, 'kaya', 'World_coal_consumption_by_region.csv')
-  oil_filename <- file.path(data.dir, 'kaya', 'World_liquids_consumption_by_region.csv')
-  gas_filename <- file.path(data.dir, 'kaya', 'World_natural_gas_consumption_by_region.csv')
-  nuclear_filename <- file.path(data.dir, 'kaya', 'World_nuclear_energy_consumption_by_region.csv')
-  renewable_filename <- file.path(data.dir, 'kaya', 'World_consumption_of_hydroelectricity_and_other_renewable_energy_by_region.csv')
+  coal_filename = file.path(data_dir, 'kaya', 'World_coal_consumption_by_region.csv')
+  oil_filename <- file.path(data_dir, 'kaya', 'World_liquids_consumption_by_region.csv')
+  gas_filename <- file.path(data_dir, 'kaya', 'World_natural_gas_consumption_by_region.csv')
+  nuclear_filename <- file.path(data_dir, 'kaya', 'World_nuclear_energy_consumption_by_region.csv')
+  renewable_filename <- file.path(data_dir, 'kaya', 'World_consumption_of_hydroelectricity_and_other_renewable_energy_by_region.csv')
 
   # See US EIA, Annual Energy Review 2012, Appendix A, Table A-6 for conversion factors, esp. nuclear
   # http://www.eia.gov/totalenergy/data/annual/pdf/aer.pdf)

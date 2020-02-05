@@ -6,7 +6,7 @@ library(stringr)
 
 
 read_tol_data <- function() {
-  data <- read.csv(file.path(data.dir, 'tol_damages', 'tol_figures.csv'), 
+  data <- read.csv(file.path(data_dir, 'tol_damages', 'tol_figures.csv'), 
                    header=TRUE, stringsAsFactors = F)
   data$class <- factor(data$age == 0 & data$error == 0, levels = c(FALSE, TRUE), 
                        labels = c('false', 'true'))

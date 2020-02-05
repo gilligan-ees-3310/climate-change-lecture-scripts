@@ -5,8 +5,8 @@ ssource <- function(filename, chdir = F) {
   if(!file.exists(filename)) {
     if(exists("script_dir", envir = globalenv()))
       script_dir = get("script_dir", envir = globalenv())
-    else if (exists("script.dir", envir = globalenv()))
-      script_dir = get("script.dir", envir = globalenv())
+    else if (exists("script_dir", envir = globalenv()))
+      script_dir = get("script_dir", envir = globalenv())
     else if (dir.exists("scripts"))
       script_dir = "scripts"
     else if (dir.exists(rprojroot::find_rstudio_root_file("scripts")))

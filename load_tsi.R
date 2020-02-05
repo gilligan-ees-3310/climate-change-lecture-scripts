@@ -1,6 +1,6 @@
-tsi.file <- file.path(data.dir, 'solar', 'historical_tsi_reconstruction.txt')
+tsi.file <- file.path(data_dir, 'solar', 'historical_tsi.csv')
 
-load_tsi <- function(as.anomaly = TRUE, skip = 7) {
+load_tsi <- function(as.anomaly = TRUE) {
   runmean <- function(x, window) {
     h = ceiling((window  - 1)/2)
     l = floor((window  - 1)/2)
@@ -13,8 +13,8 @@ load_tsi <- function(as.anomaly = TRUE, skip = 7) {
     invisible(z)
   }
 
-  # tsi <- read_csv(tsi.file)
-  tsi <- read_table(tsi.file, col_names = c("year", "value"), skip = skip)
+  tsi <- read_csv(tsi.file, col_names = c("year", "value"), skip = 1)
+  # tsi <- read_table(tsi.file, col_names = c("year", "value"), skip = skip)
   if (as.anomaly) {
     tsi <- tsi %>% mutate(t.anom.annual = value - mean(value))
   } else {

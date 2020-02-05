@@ -15,14 +15,14 @@ find_semester_dir <- function(p = NULL) {
 }
 
 
-if(!exists('semester.dir') || ! dir.exists(semester.dir) || ! file.exists(file.path(semester.dir, 'semester.yml'))) {
-#  message("Creating semester.dir")
-  semester.dir <- find_semester_dir()
+if(!exists('semester_dir') || ! dir.exists(semester_dir) || ! file.exists(file.path(semester_dir, 'semester.yml'))) {
+#  message("Creating semester_dir")
+  semester_dir <- find_semester_dir()
 } else {
-#  message("Semester.dir exists:", semester.dir, '\n')
+#  message("Semester dir exists:", semester_dir, '\n')
 }
 
-if(!exists('script.dir') || ! dir.exists(script.dir)) script.dir <- file.path(semester.dir, 'util_scripts')
-if(!exists('data.dir') || ! dir.exists(data.dir)) data.dir <- file.path(semester.dir,'data')
+if(!exists('script_dir') || ! dir.exists(script_dir)) script_dir <- file.path(semester_dir, 'util_scripts')
+if(!exists('data_dir') || ! dir.exists(data_dir)) data_dir <- file.path(semester_dir,'data')
 
-#message('Data dir = ', data.dir, " and it ", ifelse(dir.exists(data.dir), 'exists.', 'does not exist.'))
+#message('Data dir = ', data_dir, " and it ", ifelse(dir.exists(data_dir), 'exists.', 'does not exist.'))

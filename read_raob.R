@@ -1,10 +1,10 @@
 library(zoo)
 
-read.raob <- function(download.data = FALSE, data.dir = NULL) {
+read.raob <- function(download.data = FALSE, data_dir = NULL) {
   
   url <- 'http://hadobs.metoffice.com/hadat/hadat2/hadat2_monthly_global_mean.txt'
   file <- file.path('upper', 'hadat2_monthly_global_mean.txt')
-  if (! is.null(data.dir)) file <- file.path(data.dir, file)
+  if (! is.null(data_dir)) file <- file.path(data_dir, file)
   
   if (download.data)
     download.file(url, file)

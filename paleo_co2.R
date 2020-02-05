@@ -13,58 +13,58 @@ epica_temp_file <- basename(epica_temp_url)
 law_co2_file <- basename(law_co2_url)
 grim_co2_file <- basename(grim_co2_url)
 
-get_epica_co2_data <- function(data.dir = NULL, data.file = epica_co2_file, 
+get_epica_co2_data <- function(data_dir = NULL, data.file = epica_co2_file, 
                            epica_url = epica_co2_url, quiet = TRUE) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   download.file(epica_url, destfile = data.file, quiet = quiet, mode = 'wb')
 }
 
-get_epica_temp_data <- function(data.dir = NULL, data.file = epica_temp_file, 
+get_epica_temp_data <- function(data_dir = NULL, data.file = epica_temp_file, 
                                epica_url = epica_temp_url, quiet = TRUE) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   download.file(epica_url, destfile = data.file, quiet = quiet, mode = 'wb')
 }
 
-get_epica_data <- function(data.dir = NULL, quiet = TRUE) {
-  get_epica_co2_data(data.dir, quiet = quiet)
-  get_epica_temp_data(data.dir, quiet = quiet)
+get_epica_data <- function(data_dir = NULL, quiet = TRUE) {
+  get_epica_co2_data(data_dir, quiet = quiet)
+  get_epica_temp_data(data_dir, quiet = quiet)
 }
 
-get_law_dome_data <- function(data.dir = NULL, data.file = law_co2_file, 
+get_law_dome_data <- function(data_dir = NULL, data.file = law_co2_file, 
                               law_url = law_co2_url, quiet = TRUE) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   download.file(law_url, destfile = data.file, quiet = quiet, mode = 'wb')
 }
 
-get_grim_data <- function(data.file = grim_co2_file, data.dir = NULL, quiet = TRUE) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+get_grim_data <- function(data.file = grim_co2_file, data_dir = NULL, quiet = TRUE) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
 
   download.file(grim_co2_url, destfile = data.file, 
@@ -72,14 +72,14 @@ get_grim_data <- function(data.file = grim_co2_file, data.dir = NULL, quiet = TR
 }
 
 
-load_epica_co2 <- function(data.file = epica_co2_file, data.dir = NULL) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+load_epica_co2 <- function(data.file = epica_co2_file, data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   #
   # EPICA-C file has three sets of records. 
@@ -95,14 +95,14 @@ load_epica_co2 <- function(data.file = epica_co2_file, data.dir = NULL) {
   invisible(co2)
 } 
 
-load_epica_temp <- function(data.file = epica_temp_file, data.dir = NULL) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+load_epica_temp <- function(data.file = epica_temp_file, data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   temp <- read.fwf(data.file, widths=c(5,13,17,13,13),
                    header=F, skip=104, 
@@ -113,14 +113,14 @@ load_epica_temp <- function(data.file = epica_temp_file, data.dir = NULL) {
   invisible(temp)
 }
 
-load_law_dome_co2 <- function(data.file = law_co2_file, data.dir = NULL) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+load_law_dome_co2 <- function(data.file = law_co2_file, data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
   
   co2 <- read.fwf(data.file,widths = c(13,11,10), 
@@ -136,14 +136,14 @@ load_law_dome_co2 <- function(data.file = law_co2_file, data.dir = NULL) {
   invisible(co2)
 }
 
-load_grim_co2 <- function(data.file = grim_co2_file, data.dir = NULL) {
-  if (is.null(data.dir)) {
-    if (exists('data.dir', envir = parent.frame())) {
-      data.dir <- get('data.dir', envir = parent.frame())
+load_grim_co2 <- function(data.file = grim_co2_file, data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
     }
   }
-  if (! is.null(data.dir)) {
-    data.file <- file.path(data.dir, 'paleo', data.file)
+  if (! is.null(data_dir)) {
+    data.file <- file.path(data_dir, 'paleo', data.file)
   }
 
   grim <- read.csv(data.file, header=T, skip=24, stringsAsFactors = F)

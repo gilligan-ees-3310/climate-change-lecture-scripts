@@ -2,7 +2,7 @@ library(tidyverse)
 library(stringr)
 library(readxl)
 
-if (! exists('data.dir')) {
+if (! exists('data_dir')) {
   source('semester_config.R')
 }
 
@@ -21,8 +21,8 @@ load_farm_data <- function(filename) {
 }
 
 get_farm_prices <- function(min.year = NA, max.year = NA) {
-  recent_prices <- load_farm_data(file.path(data.dir, 'agriculture', 'Section1All_xls.xls'))
-  historical_prices <- load_farm_data(file.path(data.dir, 'agriculture', 'Section1All_Hist.xls'))
+  recent_prices <- load_farm_data(file.path(data_dir, 'agriculture', 'Section1All_xls.xls'))
+  historical_prices <- load_farm_data(file.path(data_dir, 'agriculture', 'Section1All_Hist.xls'))
   prices <- rbind(historical_prices, recent_prices) %>% arrange(year)
   if (! is.na(min.year)) prices <- prices %>% filter(year >= min.year)
   if (! is.na(max.year)) prices <- prices %<% filter(year <= max.year)

@@ -37,10 +37,10 @@ prepare_data <- function(min_year = 1970, change_year =  1998, last_year = NA,
 }
 
 
-stan_giss <- function(data, script.dir = NULL) {
+stan_giss <- function(data, script_dir = NULL) {
   stan_data <- list(N = nrow(data), year = data$year, temp = data$t.anom.annual)
   model_file <- 'giss.stan'
-  if (! is.null(script.dir)) model_file <- file.path(script.dir, model_file)
+  if (! is.null(script_dir)) model_file <- file.path(script_dir, model_file)
   
   model <- stan_model(model_file, 'Linear regression of GISS Temperature')
   

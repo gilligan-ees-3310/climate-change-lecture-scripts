@@ -11,11 +11,11 @@ giss_csv_url <- c(land.sea = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GL
 giss_data.source.text <- c( land.sea = paste0("Data source: NASA, ", giss_url['land.sea']),
                             land = paste0("Data source: NASA, ", giss_url['land']))
 
-giss_file <- c(land.sea = file.path(data.dir, 'global_temp', 'giss', "GLB.Ts+dSST.txt"),
-               land = file.path(data.dir, 'global_temp', 'giss', 'GLB.Ts.txt'))
+giss_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.txt"),
+               land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.txt'))
 
-giss_csv_file <- c(land.sea = file.path(data.dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
-               land = file.path(data.dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
+giss_csv_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
+               land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
 
 update.data <- function() {
   for (loc in c('land.sea','land')) {

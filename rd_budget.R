@@ -1,7 +1,7 @@
 library(tidyverse)
 library(readxl)
 
-budget_sheet <- file.path(data.dir, 'federal_rd_by_function.xlsx')
+budget_sheet <- file.path(data_dir, 'federal_rd_by_function.xlsx')
 
 rd_budget <- read_excel(budget_sheet,1, skip=2) %>% t()
 n <- rd_budget[1,]

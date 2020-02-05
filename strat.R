@@ -8,12 +8,12 @@ source('read_uah.R')
 source('read_rss.R')
 source('read_raob.R')
 
-read_strat_data <- function(data.dir = NULL) {
+read_strat_data <- function(data_dir = NULL) {
   surface <- load_giss_data()$data %>% select(year = time, anomaly = t.anom)
 
-  uah <- read.uah(data.dir = data.dir)
-  rss <- read.rss(data.dir = data.dir)
-  raob <- read.raob(data.dir = data.dir)
+  uah <- read.uah(data_dir = data_dir)
+  rss <- read.rss(data_dir = data_dir)
+  raob <- read.raob(data_dir = data_dir)
   raob$anomaly <- raob$X100hPa
 
   f <- c(rep(1,12))/12
@@ -47,8 +47,8 @@ read_strat_data <- function(data.dir = NULL) {
   invisible(data)
 }
 
-plot_strat <- function(data.dir = NULL) {
-  data <- read_strat_data(data.dir)
+plot_strat <- function(data_dir = NULL) {
+  data <- read_strat_data(data_dir)
 
   # Trend chart with trend line
   # specify plot yr min & max
@@ -70,8 +70,8 @@ plot_strat <- function(data.dir = NULL) {
   p
 }
 
-plot_strat_2 <- function(data.dir = NULL) {
-  data <- read_strat_data(data.dir)
+plot_strat_2 <- function(data_dir = NULL) {
+  data <- read_strat_data(data_dir)
 
     # Trend chart with trend line
   # specify plot yr min & max

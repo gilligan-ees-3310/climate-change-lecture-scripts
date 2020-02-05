@@ -1,8 +1,8 @@
 
-read.rss <- function(download.data = FALSE, data.dir = NULL) {
+read.rss <- function(download.data = FALSE, data_dir = NULL) {
   url <- 'http://www1.ncdc.noaa.gov/pub/data/cmb/temp-and-precip/upper-air/rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt'
   file <- file.path('upper', 'rss_monthly_msu_amsu_channel_tls_anomalies_land_and_ocean.txt')
-  if (! is.null(data.dir)) file = file.path(data.dir, file)
+  if (! is.null(data_dir)) file = file.path(data_dir, file)
   if (download.data)
     download.file(url,file)
   

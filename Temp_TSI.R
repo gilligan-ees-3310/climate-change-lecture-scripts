@@ -10,7 +10,7 @@ require(grid)
 source('load_giss.R')
 source('load_tsi.R')
 
-knit_tsi <- function(tsi.as.anomaly = TRUE) {
+knit_tsi <- function(tsi_as_anomaly = TRUE) {
   runmean <- function(x, window) {
     h = ceiling((window  - 1)/2)
     l = floor((window  - 1)/2)
@@ -35,32 +35,32 @@ knit_tsi <- function(tsi.as.anomaly = TRUE) {
   giss_csv_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
                      land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
 
-  tsi.url <- 'http://lasp.colorado.edu/lisird/tsi/historical_tsi.html'
+  tsi_url <- 'http://lasp.colorado.edu/lisird/tsi/historical_tsi.html'
 
 
   gt <- load_giss_data()
-  giss.temp <- gt$data
-  giss_url <- giss_url[gt$label]
+  giss_temp <- gt$data
+  giss_url <- giss_csv_url[gt$label]
 
-  giss.temp <- giss.temp %>% select(year, t.anom) %>% group_by(year) %>%
+  giss_temp <- giss_temp %>% select(year, t.anom) %>% group_by(year) %>%
     summarize(t.anom.annual = mean(t.anom)) %>% ungroup()
-  giss.temp$t.anom.decadal <- runmean(giss.temp$t.anom.annual,10)
-  giss.temp$var <- "Global Temperature Anomaly"
+  giss_temp$t.anom.decadal <- runmean(giss_temp$t.anom.annual,10)
+  giss_temp$var <- "Global Temperature Anomaly"
 
-  tsi <- load_tsi(tsi.as.anomaly)
+  tsi <- load_tsi(tsi_as_anomaly)
 
-  gisstemp.source.text <- paste0("Temperature data: NASA GISS, ", giss.url['land.sea'])
-  tsi.source.text <- paste0("TSI  data: LASP, ", tsi.url)
+  gisstem_source_text <- paste0("Temperature data: NASA GISS, ", giss_url['land.sea'])
+  tsi.source.text <- paste0("TSI  data: LASP, ", tsi_url)
 
-  data <- rbind(giss.temp, tsi)
+  data <- rbind(giss_temp, tsi)
   data <- data %>% gather(key = avg, value = value, -year, -var)
   data$avg <- ordered(data$avg, levels = c('t.anom.annual', 't.anom.decadal'),
                       labels = c('Annual', '10-year average'))
 
-  ann.text <- data.frame(label.a = c(gisstemp.source.text, tsi.source.text),
-                         var = c(giss.temp$var[1], tsi$var[1]),
-                         year = c(max(giss.temp$year, na.rm=T), max(tsi$year, na.rm=T)),
-                         value = c(min(giss.temp$t.anom.annual, na.rm=T) * 1.5, min(tsi$t.anom.annual, na.rm=T)))
+  ann.text <- data.frame(label.a = c(gisstem_source_text, tsi.source.text),
+                         var = c(giss_temp$var[1], tsi$var[1]),
+                         year = c(max(giss_temp$year, na.rm=T), max(tsi$year, na.rm=T)),
+                         value = c(min(giss_temp$t.anom.annual, na.rm=T) * 1.5, min(tsi$t.anom.annual, na.rm=T)))
 
   p_xmin <- 1880
   GISS_last_yr <- max(data$year)

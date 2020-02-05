@@ -24,8 +24,8 @@ download_berkeley <- function() {
   }
 }
 
-load_station_file <- function(filename, data.dir = berkeley_dir) {
-  if (! is.null(data.dir)) filename <- file.path(data.dir, basename(filename))
+load_station_file <- function(filename, data_dir = berkeley_dir) {
+  if (! is.null(data_dir)) filename <- file.path(data_dir, basename(filename))
   text <- readLines(filename)
   index <- min(grep("% Year, Month, Temperature, Anomaly,", text, fixed=TRUE))
   text <- tail(text, -index)
@@ -57,9 +57,9 @@ load_station_file <- function(filename, data.dir = berkeley_dir) {
   invisible(df)
 }
 
-load_one_berkeley_file <- function(filename, data.dir = berkeley_dir, text = NULL) {
+load_one_berkeley_file <- function(filename, data_dir = berkeley_dir, text = NULL) {
   if (is.null(text)) {
-    if (! is.null(data.dir)) filename <- file.path(data.dir, basename(filename))
+    if (! is.null(data_dir)) filename <- file.path(data_dir, basename(filename))
     text <- readLines(filename)
     index <- min(grep("% Year, Month,  Anomaly, Unc.,", text, fixed=TRUE))
     text <- tail(text, - min(index))
@@ -72,10 +72,10 @@ load_one_berkeley_file <- function(filename, data.dir = berkeley_dir, text = NUL
   invisible(df)
 }
 
-load_global_berkeley_file <- function(filename, data.dir = berkeley_dir,
+load_global_berkeley_file <- function(filename, data_dir = berkeley_dir,
                                       above.sea.ice = TRUE) {
-  if (! is.null(data.dir)) filename <-
-      file.path(data.dir, basename(filename))
+  if (! is.null(data_dir)) filename <-
+      file.path(data_dir, basename(filename))
   lines <- tail(readLines(filename), -77)
   index <- min(grep("% Global Average Temp", lines, fixed=TRUE))
   if (! is.na(index)) {
@@ -87,7 +87,7 @@ load_global_berkeley_file <- function(filename, data.dir = berkeley_dir,
   invisible(load_one_berkeley_file(text = text))
 }
 
-load_berkeley_temp <- function(data.dir = berkeley_dir) {
+load_berkeley_temp <- function(data_dir = berkeley_dir) {
   berkeley_files <- c(
     global = 'Land_and_Ocean_complete.txt',
     north_america = "north-america-TAVG-Trend.txt",
@@ -113,11 +113,11 @@ load_berkeley_temp <- function(data.dir = berkeley_dir) {
     label <- file_labels[id]
     message(id, label, filename)
     if (id == 'global') {
-      df <- load_global_berkeley_file(filename, data.dir)
+      df <- load_global_berkeley_file(filename, data_dir)
     } else if (id == 'nashville_stn') {
-      load_station_file(filename, data.dir)
+      load_station_file(filename, data_dir)
     } else {
-      df <- load_one_berkeley_file(filename, data.dir)
+      df <- load_one_berkeley_file(filename, data_dir)
     }
     df$loc <- id
     df$label <- label
