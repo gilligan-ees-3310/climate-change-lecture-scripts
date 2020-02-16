@@ -305,7 +305,12 @@ plot_modtran <- function(filename = NULL, text = NULL,
                          annotate_size = 5, text_size = 10,
                          legend_text_size = 10, legend_size = 0.2,
                          line_scale = 1, direction = "out",
-                         lambda = NULL) {
+                         use_wavelength_scale = TRUE,
+                         lambda = NULL,
+                         color = TRUE,
+                         modtran_color = NA, modtran_linetype = NA,
+                         modtran_name = "MODTRAN",
+                         extra_levels = NULL) {
   if (! is.null(modtran_data)) {
     x <- modtran_data
   } else if (! is.null(filename) && is.list(filename) &&
@@ -325,7 +330,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
   # }
 
   if (is.null(descr)) {
-    descr <- bquote(.(co2) * " ppm " * CO[2] * ", " * .(alt) * " km altitude")
+    descr <- bquote("MODTRAN: " * .(co2) * " ppm " * CO[2] * ", " * .(alt) * " km altitude")
   }
 
   if (! is.na(i_out_ref)) {
@@ -337,38 +342,98 @@ plot_modtran <- function(filename = NULL, text = NULL,
   dt <- (tmax - tmin) / (nc - 1)
   dh <- max_color / (nc - 1)
   tlist <- tmin + dt * seq(0,nc-1)
-  hues <- c(hsv(max_color - (dh * seq(0, nc - 1 )), 0.9, 0.8), "black")
 
   thermal <- data.frame(k = spectrum$k, t = tmin)
   thermal <- bind_rows(thermal, map(seq(tmin + dt, tmax, dt),
                                     ~tibble(k = spectrum$k, t = .x)))
+  thermal_levels <- thermal$t %>% unique() %>% na.omit() %>% str_c(' K')
+  if (!is.null(extra_levels)) {
+    thermal_levels = c(extra_levels$names, thermal_levels)
+  }
+  thermal_levels <- thermal_levels %>%
+    sort(decreasing = TRUE) %>% {c(modtran_name, .)}
+  thermal_labels <- thermal_levels
+  if (!is.null(modtran_name)) {
+  thermal_labels <- ifelse(thermal_labels == "MODTRAN",
+                           modtran_name, thermal_labels)
+  }
+
   thermal <- thermal %>%
     mutate(tk = planck(k, as.numeric(as.character(t)),fudge_factor=1),
-           t = paste(t, "K") %>%
-             ordered(., levels = c("MODTRAN", sort(unique(.), decreasing = TRUE)))
-    ) %>% na.omit() %>% filter(between(k, k_limits[1], k_limits[2]))
+           t = str_c(t, " K") %>%
+             ordered(., levels = thermal_levels,
+                     labels = thermal_labels)) %>%
+    na.omit() %>% filter(between(k, k_limits[1], k_limits[2]))
 
   if (is.null(lambda)) {
-  lambda = c(1, 2, 2.5, 3, 3.5, 4, 5:10, 12, 14, 17, 20, 25, 30, 35, 40, 50, 100)
+    lambda = c(1, 2, 2.5, 3, 3.5, 4, 5:10,
+               12, 14, 17, 20, 25, 30, 35, 40, 50,
+               100)
   }
+
+  if (is.na(modtran_color))
+    modtran_color = "black"
+  extra_colors = modtran_color
+  if (!is.null(extra_levels))
+    extra_colors = c(extra_colors, extra_levels$colors)
+
+  hues <- hsv(max_color - (dh * seq(0, nc - 1 )), 0.9, 0.8) %>%
+    c(extra_colors) %>%
+    set_names(rev(thermal_labels)) %>% rev()
+
+  message("colors = (", str_c(names(hues), hues, sep = " = ",
+                              collapse = ", "), ")")
+
+  if (is.na(modtran_linetype))
+    modtran_linetype = 'solid'
+  extra_linetypes = modtran_linetype
+  if (! is.null(extra_levels))
+    extra_linetypes = c(extra_levels$linetypes, extra_linetypes)
+
+  linetypes = linetype_pal()(1 + nc)[-1] %>% as.hexmode() %>% {. * 2} %>%
+    as.character.hexmode() %>% str_replace("^0+","")
+
+  linetypes = c(extra_linetypes, linetypes) %>%
+    set_names(thermal_labels)
+
+  message("linetypes = (", str_c(names(linetypes), linetypes, sep = " = ",
+                                 collapse = ", "), ")")
 
   spectrum <- spectrum %>% select(k, tk) %>% na.omit() %>%
     filter(between(k, k_limits[1], k_limits[2]))
 
+  if (use_wavelength_scale) {
+    sec_axis <- sec_axis(~ ., breaks = 1E4 / lambda,
+                         labels = as.character(lambda),
+                         name = expression(paste("Wavelength ", (mu * m))))
+  } else {
+    sec_axis = waiver()
+  }
+
+  if (is.na(descr)) {
+    title = waiver()
+  } else {
+    title = descr
+  }
+
   p1 <- ggplot(spectrum, aes(x=k,y=tk)) +
-    geom_line(aes(color="MODTRAN"), size=I(line_scale)) +
+    geom_line(aes(color=!!modtran_name), size=I(line_scale)) +
     labs(x = expression(paste("Wavenumber (", cm^-1, ")")),
          y = expression(paste("Intensity (", W/m^2 * cm^-1, ")")),
-         title = bquote("MODTRAN: " * .(descr))
+         title = title
     ) +
-    scale_x_continuous(limits=k_limits,
-                       sec.axis = sec_axis(~ ., breaks = 1E4 / lambda,
-                                           labels = as.character(lambda),
-                                           name = expression(paste("Wavelength ", (mu * m)))))
+      scale_x_continuous(limits=k_limits, sec.axis = sec_axis)
 
-  p1 <- p1 + geom_line(aes(x=k,y=tk * 3.14E+2, color = t),
-                       data=thermal, size=I(0.5 * line_scale)) +
-    scale_color_manual(values=hues, breaks=levels(thermal$t), name=NULL)
+  if (color) {
+    p1 <- p1 + geom_line(aes(x=k,y=tk * 3.14E+2, color = t),
+                         data=thermal, size=I(0.5 * line_scale)) +
+      scale_color_manual(values = hues, breaks = levels(thermal$t), name=NULL)
+  } else {
+    p1 <- p1 + geom_line(aes(x=k,y=tk * 3.14E+2, linetype = t),
+                         data=thermal, size=I(0.5 * line_scale)) +
+      scale_linetype_manual(values = set_names(linetypes, levels(thermal$t)),
+                            breaks=levels(thermal$t), name=NULL)
+  }
 
   caption <- paste("I[", direction, "] == ",
                    formatC(i_out, digits=2, format="f"))
