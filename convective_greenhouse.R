@@ -118,5 +118,5 @@ plot.conv.greenhouse <- function(delta.h = NA, lapse = 6.5, tskin = 254,
   }
   p <- p + theme_classic() +
     theme(text=element_text(size=20), axis.text=element_text(size=20))
-  print(p)
+  p
 }
