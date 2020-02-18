@@ -3,14 +3,16 @@
 #
 library(tidyverse)
 
-make_layer_diagram = function(n_layers, boundary = TRUE) {
+make_layer_diagram = function(n_layers, boundary = TRUE,
+                              sw_label = "Visible", parse_sw = FALSE,
+                              atm_label = NULL, scale = 1) {
   layer_unit = 9 / (2 * (n_layers + 1) + n_layers)
   layer_thickness = layer_unit
   layer_spacing = 2 * layer_unit
 
   visible = tibble(x = 1, xend = 2, y = 10, yend = 1,
-                       xlab = 1.05, ylab = 10, just = 0,
-                       name = "Visible")
+                       xlab = 1.1, ylab = 10, just = 0,
+                       name = sw_label)
 
   layers = tibble(name = c("Earth", paste("Atmospheric Layer", seq(n_layers))),
                       class = c("Earth", rep("Atmosphere", n_layers)),
@@ -21,7 +23,9 @@ make_layer_diagram = function(n_layers, boundary = TRUE) {
                       y = c(0.5, 1 + seq(n_layers) * (layer_thickness + layer_spacing) - 0.5 * layer_thickness)
   )
 
-  if (n_layers == 1) layers$name[2] = "Atmospheric Layer"
+  if (n_layers == 1) {
+    layers$name[2] = "Atmospheric Layer"
+  }
 
   ir = tibble(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
                   xlab = 6.2, ylab = (y + yend) / 2,  just = 0,
@@ -43,15 +47,15 @@ make_layer_diagram = function(n_layers, boundary = TRUE) {
 
   p <- ggplot() +
     geom_rect(data = layers, mapping = aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = class)) +
-    geom_segment(data = visible, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1) +
-    geom_segment(data = ir, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1, linetype = "dashed") +
-    geom_text(mapping = aes(x = x, y = y, color = class, label = name), data = layers, size = 7, hjust = 0.5, vjust = 0.5)  +
-    geom_text(data = ir, mapping = aes(x = xlab, y = ylab, label = name, hjust = just), vjust = 0.5, size = 5, parse = TRUE) +
-    annotate("text", x = visible$xlab, y = visible$ylab, label = visible$name, hjust = 0, vjust = 1, size = 5) +
+    geom_segment(data = visible, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1 * scale) +
+    geom_segment(data = ir, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1 * scale, linetype = "dashed") +
+    geom_text(mapping = aes(x = x, y = y, color = class, label = name), data = layers, size = 7 * scale, hjust = 0.5, vjust = 0.5)  +
+    geom_text(data = ir, mapping = aes(x = xlab, y = ylab, label = name, hjust = just), vjust = 0.5, size = 5 * scale, parse = TRUE) +
+    annotate("text", x = visible$xlab, y = visible$ylab, label = visible$name, hjust = 0, vjust = 1, size = 5 * scale, parse = parse_sw) +
     xlim(0,10) + ylim(0,10) +
     scale_fill_manual(values = c(Earth = "gray30", Atmosphere = "gray80"), guide = "none") +
     scale_color_manual(values = c(Earth = "white", Atmosphere = "black"), guide = "none") +
-    theme_bw() +
+    theme_bw(base_size = scale * 11) +
     theme(axis.text = element_blank(), axis.title = element_blank(),
           axis.ticks = element_blank(), panel.grid = element_blank())
 
@@ -60,13 +64,15 @@ make_layer_diagram = function(n_layers, boundary = TRUE) {
     p <- p +
       geom_hline(yintercept = boundary_y, linetype = "dotted", size = 1) +
       annotate("text", x = 10, y =boundary_y + 0.1, hjust = 1, vjust = 0,
-               label = "Boundary to space", color = "black", size = 5)
+               label = "Boundary to space", color = "black", size = 5 * scale)
   }
 
   p
 }
 
-make_nuclear_winter_diagram = function(boundary = TRUE) {
+make_nuclear_winter_diagram = function(boundary = TRUE,
+                                       sw_label = "Visible", parse_sw = FALSE,
+                                       scale = 1) {
   n_layers = 1
   layer_unit = 9 / (2 * (n_layers + 1) + n_layers)
   layer_thickness = layer_unit
@@ -83,7 +89,7 @@ make_nuclear_winter_diagram = function(boundary = TRUE) {
 
   visible = tibble(x = 1, xend = 2, y = 10, yend = max(layers$ymax),
                        xlab = 1.05, ylab = 10, just = 0,
-                       name = "Visible")
+                       name = sw_label)
 
 
   ir = tibble(x = 5.5, xend = 6.5, y = layers$ymax[n_layers + 1], yend = 10,
@@ -106,11 +112,11 @@ make_nuclear_winter_diagram = function(boundary = TRUE) {
 
   p <- ggplot() +
     geom_rect(data = layers, mapping = aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = class)) +
-    geom_segment(data = visible, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1) +
-    geom_segment(data = ir, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1, linetype = "dashed") +
-    geom_text(mapping = aes(x = x, y = y, color = class, label = name), data = layers, size = 7, hjust = 0.5, vjust = 0.5)  +
-    geom_text(data = ir, mapping = aes(x = xlab, y = ylab, label = name, hjust = just), vjust = 0.5, size = 5, parse = TRUE) +
-    annotate("text", x = visible$xlab, y = visible$ylab, label = visible$name, hjust = 0, vjust = 1, size = 5) +
+    geom_segment(data = visible, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1 * scale) +
+    geom_segment(data = ir, mapping = aes(x = x, y = y, xend = xend, yend = yend), arrow = arrow(type = "closed"), size = 1 * scale, linetype = "dashed") +
+    geom_text(mapping = aes(x = x, y = y, color = class, label = name), data = layers, size = 7 * scale, hjust = 0.5, vjust = 0.5)  +
+    geom_text(data = ir, mapping = aes(x = xlab, y = ylab, label = name, hjust = just), vjust = 0.5, size = 5 * scale, parse = TRUE) +
+    annotate("text", x = visible$xlab, y = visible$ylab, label = visible$name, hjust = 0, vjust = 1, size = 5 * scale, parse = parse_sw) +
     xlim(0,10) + ylim(0,10) +
     scale_fill_manual(values = c(Earth = "gray30", Atmosphere = "gray60"), guide = "none") +
     scale_color_manual(values = c(Earth = "white", Atmosphere = "black"), guide = "none") +
@@ -123,7 +129,7 @@ make_nuclear_winter_diagram = function(boundary = TRUE) {
     p <- p +
       geom_hline(yintercept = boundary_y, linetype = "dotted", size = 1) +
       annotate("text", x = 10, y =boundary_y + 0.1, hjust = 1, vjust = 0,
-               label = "Boundary to space", color = "black", size = 5)
+               label = "Boundary to space", color = "black", size = 5 * scale)
   }
 
   p
