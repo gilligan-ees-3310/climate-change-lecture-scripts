@@ -410,7 +410,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
     sec_axis = waiver()
   }
 
-  if (is.na(descr)) {
+  if (is.null(descr)) {
     title = waiver()
   } else {
     title = descr
