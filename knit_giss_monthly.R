@@ -34,6 +34,7 @@ make_gisplot <- function(data,
                          baseline_years = c(1951,1980),
                          dec.nov = FALSE,
                          warm_row = c(4,6),
+                         warm_row_pos = 0.12,
                          base_size = 30) {
   data.source.text <- data$label
   monthly_data <- data$data
@@ -51,6 +52,10 @@ make_gisplot <- function(data,
   last_month <- tail(filter(monthly_data, ! is.na(t.anom)), 1)
   min_temp <- min(monthly_data$t.anom.annual, na.rm=T)
   max_temp <- max(monthly_data$t.anom.annual, na.rm=T)
+  if (inc_last_month) {
+    min_temp <- min(min_temp, last_month$t.anom)
+    max_temp <- max(max_temp, last_month$t.anom)
+  }
 
   if (dec.nov) {
     year_spec <- 'Dec.-Nov.'
@@ -137,7 +142,7 @@ make_gisplot <- function(data,
     warm.string <- paste(warm.string, '\n', toString(warmest$year[i + (1:j)], sep=''))
   }
   }
-  gisplot <- gisplot + annotate('text', x=1950, y=max_temp - 0.12,
+  gisplot <- gisplot + annotate('text', x=1950, y=max_temp - warm_row_pos,
                                 hjust=0.5, vjust="top", size=base_size / 3,
                                 label = warm.string, colour='darkred',fontface='bold')
 
