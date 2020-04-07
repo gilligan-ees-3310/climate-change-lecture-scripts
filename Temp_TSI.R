@@ -35,8 +35,8 @@ knit_tsi <- function(tsi_as_anomaly = TRUE) {
   giss_csv_file <- c(land.sea = file.path(data_dir, 'global_temp', 'giss', "GLB.Ts+dSST.csv"),
                      land = file.path(data_dir, 'global_temp', 'giss', 'GLB.Ts.csv'))
 
-  tsi_url <- 'http://lasp.colorado.edu/lisird/tsi/historical_tsi.html'
-
+  tsi_url <- 'http://lasp.colorado.edu/lisird/latis/dap/historical_tsi'
+  alt_tsi_url <- 'https://spot.colorado.edu/~koppg/TSI/Historical_TSI_Reconstruction.txt'
 
   gt <- load_giss_data()
   giss_temp <- gt$data
