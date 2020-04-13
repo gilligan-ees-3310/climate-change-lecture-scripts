@@ -1,7 +1,8 @@
 library(pacman)
 p_load(tidyverse)
 p_load("ggfittext")
-p_load("treemapify")
+# p_load("treemapify")
+p_load("treemap")
 
 theme_set(theme_bw(base_size = 20))
 
@@ -72,19 +73,23 @@ treemap_gridlock <- function(nations) {
                             "#FFFF00")),
               nations$country)
 
-  tm <- treemapify(nations, area = "emissions",
-                   subgroup = "group") %>%
-    mutate(label = as.character(country) %>%
-             ifelse(. == "Indonesia", "Indo- nesia", .))
-
-  ggplot(tm, aes(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)) +
-    geom_rect(aes(fill = country)) +
-    geom_fit_text(aes(label = label, color = country), reflow = TRUE,
-                  place = "centre", size = 30) +
-    scale_fill_manual(values = colors, name = "Country") +
-    scale_color_manual(values = text_colors, guide = "none") +
-    scale_x_continuous(expand = c(0,0)) +
-    scale_y_continuous(expand = c(0,0)) +
-    theme(axis.line = element_blank(), axis.text = element_blank(),
-          axis.ticks = element_blank(), axis.title = element_blank())
+  # tm <- treemapify(nations, area = "emissions",
+  #                  subgroup = "group") %>%
+  #   mutate(label = as.character(country) %>%
+  #            ifelse(. == "Indonesia", "Indo- nesia", .))
+  #
+  # ggplot(tm, aes(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)) +
+  #   geom_rect(aes(fill = country)) +
+  #   geom_fit_text(aes(label = label, color = country), reflow = TRUE,
+  #                 place = "centre", size = 30) +
+  #   scale_fill_manual(values = colors, name = "Country") +
+  #   scale_color_manual(values = text_colors, guide = "none") +
+  #   scale_x_continuous(expand = c(0,0)) +
+  #   scale_y_continuous(expand = c(0,0)) +
+  #   theme(axis.line = element_blank(), axis.text = element_blank(),
+  #         axis.ticks = element_blank(), axis.title = element_blank())
+  treemap(nations, index = c("group", "country"), vSize = "emissions",
+          vColor = "color", type = "color", title = "", bg.labels = "yellow",
+          ymod.labels = c(-0.25, 0))
 }
+
