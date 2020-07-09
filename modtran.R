@@ -162,11 +162,11 @@ run_modtran <- function(filename = NULL,
     simplify()
   for(k in c('h2o_fixed', 'atmosphere', 'clouds', 'looking')) {
     # message("Looking up ", k)
-    lookup = model_params %>% filter(key == k) %>% select(spec) %>% simplify()
+    lookup = model_params %>% dplyr::filter(key == k) %>% select(spec) %>% simplify()
     # message("Lookup = ", lookup)
     lookup = get(lookup, 1)
     # message("Lookup class = ", class(lookup), ", type = ", typeof(lookup), ", dim = ", dim(lookup))
-    values[k] = lookup %>% filter(key == values[k]) %>% select(value) %>% simplify()
+    values[k] = lookup %>% dplyr::filter(key == values[k]) %>% select(value) %>% simplify()
   }
   args <- tibble(key = names(values), value = values)
   params = model_params %>% inner_join(args, by = "key")
@@ -210,7 +210,9 @@ read_modtran_profile <- function(filename = NULL, text = NULL) {
     str_replace_all("([^a-zA-Z0-9_]+)", ".") %>%
     str_replace_all(c('^\\.' = '', '\\.$' = ''))
   dups <- duplicated(col_names) %>% which()
-  col_names[dups] <- col_names[dups] %>% str_c(seq_along(dups), sep = ".")
+  if (length(dups) > 0) {
+    col_names[dups] <- col_names[dups] %>% str_c(seq_along(dups), sep = ".")
+  }
   profile <- lines[start:end] %>% str_trim() %>% str_c(collapse = "\n") %>%
     read_table2(col_names=col_names)
   profile <- profile %>% select(Z, P, T, H2O, O3, CO2, CH4) %>%
@@ -220,7 +222,7 @@ read_modtran_profile <- function(filename = NULL, text = NULL) {
 }
 
 extract_tropopause <- function(profile) {
-  profile %>% filter(T <= lead(T)) %>% top_n(-1, Z)
+  profile %>% dplyr::filter(T <= lead(T)) %>% top_n(-1, Z)
 }
 
 read_modtran <- function(filename = NULL, text = NULL, scale_factor = 3.14E+4) {
@@ -363,7 +365,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
            t = str_c(t, " K") %>%
              ordered(., levels = thermal_levels,
                      labels = thermal_labels)) %>%
-    na.omit() %>% filter(between(k, k_limits[1], k_limits[2]))
+    na.omit() %>% dplyr::filter(between(k, k_limits[1], k_limits[2]))
 
   if (is.null(lambda)) {
     lambda = c(1, 2, 2.5, 3, 3.5, 4, 5:10,
@@ -400,7 +402,7 @@ plot_modtran <- function(filename = NULL, text = NULL,
                                  collapse = ", "), ")")
 
   spectrum <- spectrum %>% select(k, tk) %>% na.omit() %>%
-    filter(between(k, k_limits[1], k_limits[2]))
+    dplyr::filter(between(k, k_limits[1], k_limits[2]))
 
   if (use_wavelength_scale) {
     sec_axis <- sec_axis(~ ., breaks = 1E4 / lambda,
