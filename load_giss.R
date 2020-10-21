@@ -5,6 +5,7 @@ library(tidyverse)
 library(lubridate)
 library(janitor)
 library(tsibble)
+library(slider)
 
 source('download_giss_data.R')
 
@@ -38,7 +39,7 @@ load_giss_data <- function(data_type = 'land.sea') {
   #                       strip.white = TRUE, blank.lines.skip = TRUE,
   #                       stringsAsFactors = FALSE)
   #
-  
+
   # monthly_data <- giss_data[,1:13] %>% filter(grepl('^[0-9]', year))
   # monthly_data <- monthly_data %>% gather(month, t.anom, -year)
   # monthly_data$year <- as.numeric(monthly_data$year)
@@ -61,8 +62,8 @@ load_giss_data <- function(data_type = 'land.sea') {
     filter(! is.na(t.anom))
 
   monthly_data <- monthly_data %>%
-    mutate(t.anom.annual = slide_dbl(t.anom, mean, .fill = NA, .size = 12, .align = "center-right"),
-           t.anom.decadal = slide_dbl(t.anom, mean, .fill = NA, .size = 120, .align = "center-right")
+    mutate(t.anom.annual = slider::slide_dbl(t.anom, mean, .before = 6, .after = 5, .complete = TRUE),
+           t.anom.decadal = slider::slide_dbl(t.anom, mean, .before = 60, .after = 59, .complete = TRUE)
     )
 
   invisible(list(data = as_tibble(monthly_data), label = text_label))
