@@ -32,7 +32,12 @@ fill_in <- function(df, this.year) {
   invisible(output)
 }
 
-load_maddison_kaya <- function(data_dir = "data") {
+load_maddison_kaya <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   maddison <- read_excel(file.path(data_dir, "kaya", "mpd2018.xlsx"), "Full data")
 
   kaya <- maddison %>%

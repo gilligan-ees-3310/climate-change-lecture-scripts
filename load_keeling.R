@@ -10,7 +10,12 @@ if (! exists('mlo.url')) source('download_keeling_data.R')
 
 month.names <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
-get.co2 <- function(data_dir = data_dir, file = keeling_filename) {
+get.co2 <- function(data_dir = NULL, file = keeling_filename) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   co2_data <- read.table(file.path(data_dir, 'keeling', file),row.names=NULL, header=T)
 
   df <- co2_data %>% select(year = frac.year, monthly = co2.interpolated,

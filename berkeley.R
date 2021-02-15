@@ -25,7 +25,8 @@ download_berkeley <- function() {
 }
 
 load_station_file <- function(filename, data_dir = berkeley_dir) {
-  if (! is.null(data_dir)) filename <- file.path(data_dir, basename(filename))
+  if (! is.null(data_dir))
+    filename <- file.path(data_dir, basename(filename))
   text <- readLines(filename)
   index <- min(grep("% Year, Month, Temperature, Anomaly,", text, fixed=TRUE))
   text <- tail(text, -index)

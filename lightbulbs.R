@@ -56,7 +56,12 @@ make_use_data <- function() {
   invisible(use_data)
 }
 
-get_state_pop_1990s <- function(data_dir = data_dir) {
+get_state_pop_1990s <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   state_pop_1990s_file <- file.path(data_dir, "energy", "state_pop_1990s.Rds")
 
   if (file.exists(state_pop_1990s_file)) {
@@ -87,7 +92,12 @@ get_state_pop_1990s <- function(data_dir = data_dir) {
   invisible(sp_1990)
 }
 
-get_state_pop_2000s <- function(data_dir = data_dir) {
+get_state_pop_2000s <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   state_pop_2000s_file <- file.path(data_dir, "energy", "state_pop_2000s.Rds")
 
   if (file.exists(state_pop_2000s_file)) {
@@ -109,7 +119,12 @@ get_state_pop_2000s <- function(data_dir = data_dir) {
   invisible(sp_2000)
 }
 
-get_state_pop_2010s <- function(data_dir = data_dir) {
+get_state_pop_2010s <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   state_pop_2010s_file <- file.path(data_dir, "energy", "state_pop_2010.Rds")
 
   if (file.exists(state_pop_2010s_file)) {
@@ -128,7 +143,12 @@ get_state_pop_2010s <- function(data_dir = data_dir) {
   invisible(sp_2010)
 }
 
-get_state_pop <- function(data_dir = data_dir) {
+get_state_pop <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   sp_1990 <- get_state_pop_1990s(data_dir)
   sp_2000 <- get_state_pop_2000s(data_dir)
   sp_2010 <- get_state_pop_2010s(data_dir)

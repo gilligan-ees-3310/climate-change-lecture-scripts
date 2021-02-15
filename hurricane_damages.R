@@ -3,7 +3,12 @@ library(readxl)
 library(janitor)
 library(lubridate)
 
-load_pielke <- function(data_dir) {
+load_pielke <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   storms <- read_excel(file.path(data_dir, "storm_damages/Weinkle_normalized_hurricane_damages.xlsx"),
                        sheet = "Storm Damages") %>%
     janitor::clean_names() %>% mutate(year = as.integer(year)) %>%

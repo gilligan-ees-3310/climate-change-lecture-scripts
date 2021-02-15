@@ -9,6 +9,11 @@ source('read_rss.R')
 source('read_raob.R')
 
 read_strat_data <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
   surface <- load_giss_data()$data %>% select(year = time, anomaly = t.anom)
 
   uah <- read.uah(data_dir = data_dir)

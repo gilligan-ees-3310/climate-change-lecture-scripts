@@ -2,9 +2,12 @@ library(pacman)
 p_load(tidyverse)
 p_load(stringr)
 
-data_dir = 'data'
-
-load_energy_by_fuel <- function(data_dir = data_dir) {
+load_energy_by_fuel <- function(data_dir = NULL) {
+  if (is.null(data_dir)) {
+    if (exists('data_dir', envir = parent.frame())) {
+      data_dir <- get('data_dir', envir = parent.frame())
+    }
+  }
 
   coal_filename = file.path(data_dir, 'kaya', 'World_coal_consumption_by_region.csv')
   oil_filename <- file.path(data_dir, 'kaya', 'World_liquids_consumption_by_region.csv')
