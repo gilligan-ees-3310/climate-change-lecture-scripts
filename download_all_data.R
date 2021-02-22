@@ -61,9 +61,7 @@ write.table(CO2_data,file=file.path(data_dir, "keeling", noaa_keeling_filename),
 # DOWNLOAD TSI DATA
 #
 tsi.url <- str_c('http://lasp.colorado.edu/lisird/latis/dap/historical_tsi.csv',
-                 '?&time>=1610-01-01T00:00:00.000Z&time<=',
-                 lubridate::now(tz = "UTC") %>%
-                   strftime("%Y-%m-%dT%H:%M:%S%z", tz = "UTC"))
+                 '?&time>=1610-01-01T00:00:00.000Z'))
 
 tsi.file <- 'historical_tsi.csv'
 
