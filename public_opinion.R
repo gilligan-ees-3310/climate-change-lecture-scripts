@@ -1,5 +1,5 @@
 #
-# Polling data on climate change, 
+# Polling data on climate change,
 # Aggregated by pollingreport.com
 # http://www.pollingreport.com/enviro.htm
 #
@@ -33,6 +33,8 @@ get_public_opinion = function() {
     bind_rows(
       tibble(
         date = c(
+          "2019-03-05",
+          "2018-03-04",
           "2017-03-05",
           "2016-03-06",
           "2015-03-08",
@@ -40,9 +42,15 @@ get_public_opinion = function() {
           "2013-03-10",
           "2012-03-11",
           "2011-03-06",
-          "2010-03-07"
+          "2010-03-07",
+          "2008-03-09",
+          "2007-03-14",
+          "2006-03-16",
+          "2003-03-05"
         ),
         anthropogenic = c(
+          66,
+          64,
           68,
           65,
           55,
@@ -50,10 +58,14 @@ get_public_opinion = function() {
           57,
           53,
           52,
-          50
+          50,
+          58,
+          61,
+          58,
+          61
         ),
         source = c(
-          "Gallup"  
+          "Gallup"
         )
       )
     ) %>%
@@ -78,7 +90,7 @@ get_public_opinion = function() {
           36
         ),
         source = c(
-          "Pew"  
+          "Pew"
         )
       )
     ) %>%
@@ -101,32 +113,7 @@ get_public_opinion = function() {
           54
         ),
         source = c(
-          "CNN"  
-        )
-      )
-    ) %>%
-    bind_rows(
-      tibble(
-        date = c(
-          "2012-03-11",
-          "2011-03-06",
-          "2010-03-07",
-          "2008-03-09",
-          "2007-03-14",
-          "2006-03-16",
-          "2003-03-05"
-        ),
-        anthropogenic = c(
-          53,
-          52,
-          50,
-          58,
-          61,
-          58,
-          61
-        ),
-        source = c(
-          "Gallup"
+          "CNN"
         )
       )
     ) %>%
@@ -160,6 +147,13 @@ get_public_opinion = function() {
     bind_rows(
       tibble(
         date = c(
+          '2020-12-01',
+          '2020-04-01',
+          '2019-11-14',
+          '2019-04-03',
+          '2018-12-04',
+          '2018-03-01',
+          '2017-10-01',
           "2017-05-15",
           "2016-11-15",
           "2016-03-15",
@@ -178,6 +172,13 @@ get_public_opinion = function() {
           "2008-11-15"
         ),
         anthropogenic = c(
+          58,
+          62,
+          59,
+          55,
+          62,
+          58,
+          54,
           56,
           55,
           56,
@@ -200,17 +201,17 @@ get_public_opinion = function() {
         )
       )
     )
-  
+
   invisible(public_belief_anthropogenic)
 }
 
 plot_public_opinion <- function(public_belief = public_belief_anthropogenic) {
-  ggplot(public_belief, aes(x = ymd(date), y = anthropogenic, color = source)) + 
-    geom_point(size = 2) + 
-    geom_line(stat = "smooth", size = 1, alpha = 0.7, method = "auto") + 
-    geom_hline(yintercept = 50, alpha = 0.50, color = "black") + 
-    scale_color_brewer(palette = "Dark2") + 
-    labs(x = "Year", y = "Caused by Humans (%)") + 
+  ggplot(public_belief, aes(x = ymd(date), y = anthropogenic, color = source)) +
+    geom_point(size = 2) +
+    geom_line(stat = "smooth", size = 1, alpha = 0.7, method = "auto") +
+    geom_hline(yintercept = 50, alpha = 0.50, color = "black") +
+    scale_color_brewer(palette = "Dark2") +
+    labs(x = "Year", y = "Caused by Humans (%)") +
     guides(color = guide_legend(override.aes=list(alpha = 1.0))) +
     theme_bw(base_size = 20)
 }

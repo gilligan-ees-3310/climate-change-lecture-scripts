@@ -10,7 +10,7 @@ download_lcv <- function(min_year = NA, max_year = NA, dest_dir = lcv_dir) {
   url_base <- "http://scorecard.lcv.org/exports/"
 
   if (is.na(min_year)) min_year <- 1972
-  if (is.na(max_year)) max_year <- 2018
+  if (is.na(max_year)) max_year <- 2020
 
   for (year in seq(min_year, max_year)) {
     for (chamber in c("senate", "house")) {
@@ -28,11 +28,21 @@ download_lcv <- function(min_year = NA, max_year = NA, dest_dir = lcv_dir) {
   }
 }
 
-load_lcv <- function(src_dir = lcv_dir) {
+load_lcv <- function(src_dir = lcv_dir, min_year = NA, max_year = NA) {
+  files <- list.files(src_dir,
+                      pattern = "[0-9]+-(house|senate)-scorecard.*\\.csv")
+  years <- files %>% str_extract("^[0-9]{4}") %>% unique() %>% sort()
+  if (is.na(min_year)) {
+    min_year <- min(years)
+  }
+  if (is.na(max_year)) {
+    max_year <- max(years)
+  }
+
   data <- tibble()
 
   for (chamber in c("senate", "house")) {
-    for (year in (1972:2018)) {
+    for (year in (min_year:max_year)) {
       fname <- str_glue_data(list(year = year, chamber = chamber),
                              lcv_file_template)
       fpath <- file.path(src_dir, fname)

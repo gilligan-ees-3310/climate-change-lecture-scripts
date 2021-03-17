@@ -6,18 +6,25 @@ library(stringr)
 
 
 read_tol_data <- function() {
-  data <- read.csv(file.path(data_dir, 'tol_damages', 'tol_figures.csv'), 
-                   header=TRUE, stringsAsFactors = F)
-  data$class <- factor(data$age == 0 & data$error == 0, levels = c(FALSE, TRUE), 
-                       labels = c('false', 'true'))
-  data$age <- ordered(data$age, levels = 0:2, 
-                      labels = c('original', 'gremlin omission', 'recent'))
-  data$error <- ordered(data$error, levels = c(1,0,2), 
-                        labels = c('gremlin error', 'valid', 'corrected'))
+  data <- read_csv(file.path(data_dir, 'tol_damages', 'tol_figures.csv'))
+  data <- data %>%
+    mutate(class = factor(age == 0 & error == 0, levels = c(FALSE, TRUE)),
+           age = ordered(age, levels = 0:2,
+                         labels = c("original", "gremlin omission", "recent")),
+           error = ordered(error, levels = c(1, 0, 2),
+                           labels = c("gremlin error", "valid", "corrected")))
   invisible(data)
 }
 
 plot_tol_data <- function(tol_data, as.damages = TRUE) {
+  tol_data <- tol_data %>% mutate(
+    age = age %>%
+      fct_expand("gremlin error") %>%
+      fct_relevel("original", "gremlin error"),
+    age = if_else(error == "gremlin error",
+                  ordered("gremlin error", levels = levels(age)), age)
+  )
+
   if (as.damages) {
     tol_data$impact <- - tol_data$impact
     damage_caption = "Damages as percent of global GDP"
@@ -30,20 +37,23 @@ plot_tol_data <- function(tol_data, as.damages = TRUE) {
     legend_pos = c(0.05, 0.06)
     legend_just = c(0,0)
   }
-  p <- ggplot(tol_data, aes(x = warming, y = impact, 
-                            color = age, shape = error, alpha = class)) +
+  p <- ggplot(tol_data, aes(x = warming, y = impact,
+                            color = age, shape = error,
+                            alpha = class)) +
     geom_point(size = 5) +
     geom_hline(yintercept = 0) +
     scale_x_continuous(limits = c(0,6), breaks = 0:6) +
     scale_y_continuous(limits = yrange, breaks = seq(yrange[1],yrange[2],5),
                        minor_breaks = seq(yrange[1],yrange[2],1)) +
-    scale_color_manual(name = '', values = c('original' = 'darkblue', 
-                                  'gremlin omission' = 'darkorange', 
-                                  'recent' = 'darkred'), 
+    scale_color_manual(name = '', values = c('original' = 'darkblue',
+                                             'gremlin omission' = 'darkorange',
+                                             'gremlin error' = 'darkred',
+                                             'recent' = 'darkgreen'),
                        guide = guide_legend(reverse = TRUE)) +
-    scale_shape_manual(values = c('valid' = 16, 'gremlin error' = 13, 'corrected' = 17),
+    scale_shape_manual(values = c('valid' = 16, 'gremlin error' = 13,
+                                  'corrected' = 17),
                        name = '', guide = guide_legend(reverse = TRUE)) +
-    scale_alpha_manual(values = c(false = 1, true = 0.3), guide = FALSE) + 
+    scale_alpha_manual(values = c("FALSE" = 1, "TRUE" = 0.3), guide = FALSE) +
     labs(x = expression(paste("Warming ", (degree * C))),
          y = damage_caption) +
     theme(legend.position = legend_pos, legend.justification = legend_just,
@@ -60,17 +70,17 @@ plot_original_tol_data <- function(tol_data, as.damages = TRUE) {
     damage_caption = "Percent change in global GDP"
     yrange = c(-15,5)
   }
-  p <- ggplot(tol_data %>% filter(age == 'original'), 
-              aes(x = warming, y = impact, 
+  p <- ggplot(tol_data %>% filter(age == 'original'),
+              aes(x = warming, y = impact,
                   color = age, alpha = class)) +
     geom_point(size = 5, alpha = 0.3) +
     geom_hline(yintercept = 0) +
     scale_x_continuous(limits = c(0,6), breaks = 0:6) +
     scale_y_continuous(limits = yrange, breaks = seq(yrange[1],yrange[2],5),
                        minor_breaks = seq(yrange[1],yrange[2],1)) +
-    scale_color_manual(name = '', values = c('original' = 'darkblue', 
-                                             'gremlins (2014)' = 'darkorange', 
-                                             'recent' = 'darkred'), 
+    scale_color_manual(name = '', values = c('original' = 'darkblue',
+                                             'gremlins (2014)' = 'darkorange',
+                                             'recent' = 'darkred'),
                        guide = FALSE) +
     scale_shape_manual(values = c('valid' = 16, 'gremlin error' = 13, 'corrected' = 17),
                        name = '', guide = FALSE) +
@@ -78,3 +88,11 @@ plot_original_tol_data <- function(tol_data, as.damages = TRUE) {
          y = damage_caption)
   p
 }
+
+
+# %>%
+# fct_expand("gremlin error") %>%
+#   fct_relevel("original", "gremlin error")
+#   age = ifelse(age == "original" & error == "gremlin error",
+# "gremlin-error", age) %>%
+#   fct_relevel())
