@@ -700,6 +700,7 @@ fig.7.b <- function() {
   x.lab.c <- 0.99 * xmax
 
   p0() %>% update_scale('x', breaks = c(equilibrium$x, e.perc$x), labels = c('E*','E\'')) +
+    geom_point(data = e.perc.1, aes(x = x, y = y, color = 'benefit.perc'), size = point.size) +
     geom_ribbon(data = ribbon.dw,
                 aes(x = x, ymin = ymin, ymax = ymax,
                     color = NA, fill = 'benefit.perc', alpha = 'benefit.perc')) +
@@ -728,6 +729,8 @@ fig.7.b <- function() {
     geom_segment(aes(x = x, yend = I(0), xend = x, y = calc_y(x, econ, 'benefit'),
                      color = 'benefit.perc'),
                  data = e.perc, linetype = 'dashed', size = line.width) +
+    fill_scale +
+    scale_alpha_manual(values = c(benefit = 1, cost = 1, benefit.perc = 1)) +
     annotate('text', x = equilibrium$x, y = 2 * equilibrium$y,
              label = 'Deadweight\nLoss', size = text.size, vjust = 0) +
     annotate('segment', x = equilibrium$x, y = 1.95 * equilibrium$y,
@@ -735,26 +738,53 @@ fig.7.b <- function() {
              arrow = grid::arrow(ends = 'last', type = 'closed',
                                  length = grid::unit(0.02, 'npc')),
              color = 'black') +
-    fill_scale +
-    scale_alpha_manual(values = c(benefit = 1, cost = 1, benefit.perc = 1)) +
     theme(axis.title.x = element_text(vjust = xvjust, hjust = 0),
           plot.margin = grid::unit(c(1,1, 0.5 + bm.delta, 0.5 + rm.delta), 'lines'))
 }
 
-econ_perc.3 <- econ_perc.2
-e.perc.3 <- e.perc.2
-x.perc.3 <- x.perc.2
-e.perc.dw.3 <- e.perc.3 %>%
+econ_perc.3a <- econ_perc.1
+e.perc.3a <- e.perc.1
+x.perc.3a <- x.perc.1
+e.perc.dw.3a <- e.perc.3a %>%
   mutate(x = (y - econ['benefit','zero']) / econ['benefit','slope'])
 
-ribbon.dw.3 <- gen_ribbon(econ, xrange = c(e.perc.dw.3$x, equilibrium$x), zero = FALSE)
-a.coord.3 <- expand.grid(x = c(e.perc.dw.3$x, equilibrium$x), lab = c('cost','benefit'),
+ribbon.dw.3a <- gen_ribbon(econ, xrange = c(e.perc.dw.3a$x, equilibrium$x), zero = FALSE)
+a.coord.3a <- expand.grid(x = c(e.perc.dw.3a$x, equilibrium$x), lab = c('cost','benefit'),
                          stringsAsFactors = F) %>%
-  group_by(lab) %>% mutate(y = calc_y(x, econ_perc.3, lab)) %>% ungroup() %>%
+  group_by(lab) %>% mutate(y = calc_y(x, econ_perc.3a, lab)) %>% ungroup() %>%
   summarize(x = mean(x) + 0.01, y = mean(y) - 0.01)
 
+econ_perc.3b <- econ_perc.3a
+e.perc.3b <- e.perc.3a
+x.perc.3b <- x.perc.3a
+e.perc.dw.3b <- e.perc.3a
 
+ribbon.dw.3b <- gen_ribbon(econ, xrange = c(e.perc.3b$x, equilibrium$x), zero = FALSE)
+# x.perc.3 <- - with(econ_perc.3['benefit.perc',], zero / slope)
+x.perc.3b <- (with(filter(econ_perc.3b, lab == "benefit"), zero + x.lab.b * slope) -
+               filter(econ_perc.3b, lab == "benefit.perc")$zero) /
+  filter(econ_perc.3b, lab == "benefit.perc")$slope
 
+a.coord.3b <- expand.grid(x = c(e.perc.3b$x, equilibrium$x), lab = c('cost','benefit'),
+                         stringsAsFactors = F) %>%
+  group_by(lab) %>%  mutate(y = calc_y(x, econ_perc.3b, lab)) %>% ungroup() %>%
+  summarize(x = mean(x), y = mean(y) - 0.01)
+
+if (TRUE) {
+  econ_perc.3 <- econ_perc.3a
+  e.perc.3 <- e.perc.3a
+  x.perc.3 <- x.perc.3a
+  e.perc.dw.3 <- e.perc.dw.3a
+  ribbon.dw.3 <- ribbon.dw.3a
+  a.coord.3 <- a.coord.3a
+} else {
+  econ_perc.3 <- econ_perc.3a
+  e.perc.3 <- e.perc.3a
+  x.perc.3 <- x.perc.3a
+  e.perc.dw.3 <- e.perc.dw.3a
+  ribbon.dw.3 <- ribbon.dw.3a
+  a.coord.3 <- a.coord.3a
+}
 
 fig.7.c <- function() {
   econ_perc <- econ_perc.3
@@ -769,19 +799,20 @@ fig.7.c <- function() {
 
   p0() %>% update_scale('x', breaks = c(equilibrium$x, e.perc.dw$x), labels = c('E*','E\'')) %>%
     update_scale('y', breaks = c(equilibrium$y, e.perc$y), labels = c('P*','P\'')) +
+    geom_point(data = e.perc.3, aes(x = x, y = y, color = 'benefit.perc'), size = point.size) +
     geom_ribbon(data = ribbon.dw,
                 aes(x = x, ymin = ymin, ymax = ymax,
                     color = NA, fill = 'benefit.perc', alpha = 'benefit.perc')) +
     geom_abline(data = econ_perc,
                 aes(slope = slope, intercept = zero, color = lab), size = line.width) +
     geom_text(x = x.lab.b,
-              y = 0.01 + calc_y(x.lab.b, econ_perc, 'benefit'),
+              y = -0.015 + calc_y(x.lab.b, econ_perc, 'benefit'),
               angle = angle(econ_perc, 'benefit'),
               size = text.size,
-              hjust = 0, vjust = 0,
+              hjust = 0, vjust = 1,
               label = "MB[society]", parse=TRUE) +
-    geom_text(x = x.lab.b,
-              y = -0.015 + calc_y(x.lab.b, econ_perc, 'benefit.perc'),
+    geom_text(x = x.lab.b * 2.3,
+              y = -0.015 + calc_y(x.lab.b * 2.3, econ_perc, 'benefit.perc'),
               angle = angle(econ_perc, 'benefit.perc'),
               size = text.size,
               hjust = 0, vjust = 1,
@@ -799,8 +830,7 @@ fig.7.c <- function() {
     geom_segment(aes(x = x, y = y, xend = I(0), yend = y, color = 'benefit'),
                  data = equilibrium, linetype = 'dashed', size = line.width) +
     geom_segment(aes(x = x, y = y, xend = I(0), yend = y, color = 'benefit.perc'),
-                 data = e.perc.dw, linetype = 'dashed', size = line.width) +
-    geom_point(data = e.perc.3, aes(x = x, y = y, color = 'benefit.perc'), size = point.size) +
+                 data = e.perc, linetype = 'dashed', size = line.width) +
     fill_scale +
     scale_alpha_manual(values = c(benefit = 1, cost = 1, benefit.perc = 1)) +
     annotate('text', x = equilibrium$x, y = 2 * equilibrium$y,
